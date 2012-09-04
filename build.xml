@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." name="SPL adaptation" default="main">
+	<property name="version" value="0.1" />
+
+	<property name="src.dir.main" value="src" />
+	<property name="src.dir.example" value="src-example" />
+	<property name="lib.dir" value="lib" />
+	
+	<property name="build.dir" value="out" />
+	<property name="class.dir" value="${build.dir}/classes" />
+	<property name="jar.dir" value="${build.dir}/jar" />
+	
+	<property name="agent.jar.file" value="spl-agent.jar" />
+	
+	<path id="classpath">
+		<pathelement location="${class.dir}" />
+		<path location="${lib.dir}/asm-debug-all-4.0.jar" />
+		<path location="${lib.dir}/dislserver-unspec.jar" />
+	</path>
+	
+	<target name="main" depends="pack-agent,compile-example">
+	</target>
+	
+	<target name="clean">
+		<delete dir="${build.dir}" />
+	</target>	
+		
+	<target name="pack-agent" depends="compile-agent">
+		<mkdir dir="${jar.dir}" />
+		<jar
+			destfile="${jar.dir}/${agent.jar.file}"
+			basedir="${class.dir}"
+			includes="cz/cuni/mff/d3s/spl/agent/**,cz/cuni/mff/d3s/spl/core/**"
+		>
+			<zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+			<manifest>
+				<attribute
+					name="Premain-Class"
+					value="cz.cuni.mff.d3s.spl.agent.AgentMain" />
+				<attribute
+					name="Can-Retransform-Classes"
+					value="true" />
+				<attribute
+					name="Can-Redefine-Classes"
+					value="true" />
+			</manifest>
+		</jar>
+	</target>
+	
+	<target name="compile-agent">
+		<mkdir dir="${class.dir}" />
+		<javac
+			srcdir="${src.dir.main}"
+			destdir="${class.dir}"
+			classpathref="classpath"
+			debug="true"
+			includeantruntime="false"
+		>
+			<compilerarg value="-Xlint:all"/>
+		</javac>
+	</target>
+	<target name="compile-example">
+		<mkdir dir="${class.dir}" />
+		<javac
+			srcdir="${src.dir.example}"
+			destdir="${class.dir}"
+			classpathref="classpath"
+			includeantruntime="false"
+		>
+			<compilerarg value="-Xlint:all"/>
+		</javac>
+	</target>
+	
+	<target name="run" depends="pack-agent,compile-example">
+		<java classname="cz.cuni.mff.d3s.spl.example.checksla.app.Main" fork="true">
+			<classpath refid="classpath" />
+			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.class=cz.cuni.mff.d3s.spl.example.checksla.checker.SlaChecker" />
+			<jvmarg value="-ea" />
+		</java>
+	</target>
+		
+</project>
