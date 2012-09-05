@@ -71,6 +71,16 @@
 		</javac>
 	</target>
 	
+	<target name="doc">
+		<javadoc
+			destdir="out/doc"
+			windowtitle="SPL for adaptation API doc">
+			<fileset dir="${src.dir.main}">
+				<include name="cz/**"/>
+			</fileset>
+		</javadoc>
+	</target>
+	
 	<target name="run" depends="pack-agent,compile-example">
 		<java classname="cz.cuni.mff.d3s.spl.example.checksla.app.Main" fork="true">
 			<classpath refid="classpath" />
