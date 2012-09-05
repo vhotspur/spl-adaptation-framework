@@ -1,10 +1,15 @@
 package cz.cuni.mff.d3s.spl.agent;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import ch.usi.dag.disl.annotation.GuardMethod;
 import ch.usi.dag.disl.staticcontext.MethodStaticContext;
 import cz.cuni.mff.d3s.spl.agent.InstrumentationDaemon;
 import cz.cuni.mff.d3s.spl.core.InMemoryMeasurement;
 import cz.cuni.mff.d3s.spl.core.Measurement;
+import cz.cuni.mff.d3s.spl.core.data.SampleStorage;
+import cz.cuni.mff.d3s.spl.core.data.storage.InMemorySamples;
 
 /** Wrapper for accessing instrumentation agent and measurement results. */
 public class Access {
@@ -94,4 +99,16 @@ public class Access {
 		InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
 		return agent.shallInstrument(ctx.thisClassName().replace('/', '.'),  ctx.thisMethodName());
 	}
+	
+	private static Map<String, SampleStorage> samples = new HashMap<>();
+	
+	public static synchronized SampleStorage getSampleStorage(String id) {
+		SampleStorage result = samples.get(id);
+		if (result == null) {
+			result = new InMemorySamples(id);
+			samples.put(id, result);
+		}
+		return result;
+	}
+	
 }
