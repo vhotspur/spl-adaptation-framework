@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.spl.core.data.segment;
 
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
+import cz.cuni.mff.d3s.spl.core.data.Statistics;
 
 /** Wrapper for creating sliding time slot view on another data source. */
 public class SlidingSerieDataSource {
@@ -25,6 +26,44 @@ public class SlidingSerieDataSource {
 	 */
 	public static SerieDataSource create(SerieDataSource origin,
 			long slotOffsetSec, long slotLengthSec) {
-		return null;
+		return new Implementation(origin, slotOffsetSec + slotLengthSec,
+				slotOffsetSec);
+	}
+
+	private static class Implementation implements SerieDataSource {
+
+		private SerieDataSource origin;
+		private long startTimeOffsetMillis;
+		private long endTimeOffsetMillis;
+
+		public Implementation(SerieDataSource data, long startOffsetSec,
+				long endOffsetSec) {
+			origin = data;
+			startTimeOffsetMillis = startOffsetSec * 1000;
+			endTimeOffsetMillis = endOffsetSec * 1000;
+		}
+
+		@Override
+		public Statistics get() {
+			SerieDataSource segment = getMySegment();
+			return segment.get();
+		}
+
+		@Override
+		public SerieDataSource getSegment(long startTime, long endTime) {
+			throw new UnsupportedOperationException();
+		}
+
+		private SerieDataSource getMySegment() {
+			long now = System.currentTimeMillis();
+			return origin.getSegment(now - startTimeOffsetMillis, now - endTimeOffsetMillis);
+		}
+
+		@Override
+		public String toString() {
+			return String.format("Sliding source [%d, %d, %d, %s] above %s",
+					startTimeOffsetMillis, endTimeOffsetMillis, System.currentTimeMillis(),
+					getMySegment().get(), origin);
+		}
 	}
 }
