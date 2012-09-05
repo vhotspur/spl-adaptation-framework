@@ -1,6 +1,8 @@
 package cz.cuni.mff.d3s.spl.agent;
 
 import cz.cuni.mff.d3s.spl.core.Measurement;
+import cz.cuni.mff.d3s.spl.core.data.SampleStorage;
+import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
 import ch.usi.dag.disl.annotation.After;
 import ch.usi.dag.disl.annotation.Before;
 import ch.usi.dag.disl.annotation.SyntheticLocal;
@@ -28,6 +30,9 @@ public class Snippets {
 			//System.err.printf("%s runs for %dns (started at %dms since epoch).\n", probeName, runLengthNanos, nowMillis);
 			Measurement measurement = Access.getMeasurement();
 			measurement.add(probeName, runLengthNanos, nowMillis);
+			
+			SampleStorage storage = Access.getSampleStorage(InstrumentingDataSource.createId(sc.thisClassName(), sc.thisMethodName()));
+			storage.add(runLengthNanos, nowMillis);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
