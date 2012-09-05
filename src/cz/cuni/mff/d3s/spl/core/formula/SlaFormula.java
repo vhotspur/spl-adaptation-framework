@@ -1,6 +1,9 @@
 package cz.cuni.mff.d3s.spl.core.formula;
 
+import java.util.NoSuchElementException;
+
 import cz.cuni.mff.d3s.spl.core.data.DataSource;
+import cz.cuni.mff.d3s.spl.core.data.Statistics;
 
 /** Wrapper for creating service-level-agreement based SPL formulas. */
 public class SlaFormula {
@@ -15,6 +18,34 @@ public class SlaFormula {
 	 * @return SPL formula representing the SLA.
 	 */
 	public static Formula createSimple(DataSource source, long limitNanos) {
-		return null;
+		return new SimpleSla(source, limitNanos);
+	}
+
+	private static class SimpleSla implements Formula {
+
+		private DataSource source;
+		private long limitNanos;
+
+		public SimpleSla(DataSource datasource, long limitNanosec) {
+			source = datasource;
+			limitNanos = limitNanosec;
+		}
+
+		@Override
+		public void bind(String variable, DataSource data)
+				throws NoSuchElementException {
+			throw new UnsupportedOperationException(
+					"It is not possible to bind source to simple SLA formula.");
+		}
+
+		@Override
+		public Result evaluate() {
+			Statistics stats = source.get();
+			if (stats.getArithmeticMean() * 1.1 > limitNanos) {
+				return Result.VIOLATES;
+			} else {
+				return Result.COMPLIES;
+			}
+		}
 	}
 }
