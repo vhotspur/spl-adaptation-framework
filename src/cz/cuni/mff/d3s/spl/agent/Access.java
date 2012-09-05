@@ -5,34 +5,11 @@ import java.util.Map;
 
 import ch.usi.dag.disl.annotation.GuardMethod;
 import ch.usi.dag.disl.staticcontext.MethodStaticContext;
-import cz.cuni.mff.d3s.spl.agent.InstrumentationDaemon;
-import cz.cuni.mff.d3s.spl.core.InMemoryMeasurement;
-import cz.cuni.mff.d3s.spl.core.Measurement;
 import cz.cuni.mff.d3s.spl.core.data.SampleStorage;
 import cz.cuni.mff.d3s.spl.core.data.storage.InMemorySamples;
 
 /** Wrapper for accessing instrumentation agent and measurement results. */
 public class Access {
-	private static Measurement measurement = null;
-	
-	/** Get and possibly initialize currently used measurement storage.
-	 * 
-	 * @return Currently used measurement storage.
-	 */
-	public static Measurement getMeasurement() {
-		initMeasurement();
-		return measurement;
-	}
-	
-	/** Initialize currently used measurement storage. */
-	private static synchronized void initMeasurement() {
-		if (measurement != null) {
-			return;
-		}
-		
-		measurement = new InMemoryMeasurement();
-	}
-	
 	/** Instrument given method.
 	 * 
 	 * @param fullMethodName Full class name (package separated by dots) followed by method name (separated by hash sign).
