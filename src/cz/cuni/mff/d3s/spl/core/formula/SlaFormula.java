@@ -7,6 +7,8 @@ import cz.cuni.mff.d3s.spl.core.data.Statistics;
 
 /** Wrapper for creating service-level-agreement based SPL formulas. */
 public class SlaFormula {
+	public static final int MIN_SAMPLE_COUNT = 10;
+	
 	/**
 	 * Create SLA formula where measured samples ought to be smaller than given
 	 * limit.
@@ -41,6 +43,11 @@ public class SlaFormula {
 		@Override
 		public Result evaluate() {
 			Statistics stats = source.get();
+			
+			if (stats.getSampleCount() < MIN_SAMPLE_COUNT) {
+				return Result.CANNOT_COMPUTE;
+			}
+			
 			if (stats.getArithmeticMean() * 1.1 > limitNanos) {
 				return Result.VIOLATES;
 			} else {
