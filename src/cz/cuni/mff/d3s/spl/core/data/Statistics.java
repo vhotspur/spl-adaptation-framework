@@ -14,4 +14,11 @@ public interface Statistics {
 	 * @return Arithmetic mean of the samples at the time of the method call.
 	 */
 	double getArithmeticMean();
+
+	/**
+	 * Tell number of samples used for computing the statistics.
+	 * 
+	 * @return Number of input samples.
+	 */
+	long getSampleCount();
 }

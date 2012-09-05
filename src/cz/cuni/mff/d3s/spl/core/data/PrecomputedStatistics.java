@@ -5,12 +5,12 @@ import java.util.Collection;
 
 public class PrecomputedStatistics implements Statistics {
 	private double mean = 0.0;
-	private long len = 0;
+	private long count = 0;
 
 	public static PrecomputedStatistics create(Collection<Long> samples) {
 		PrecomputedStatistics result = new PrecomputedStatistics();
 		result.mean = getSampleMean(samples);
-		result.len = samples.size();
+		result.count = samples.size();
 		return result;
 	}
 
@@ -18,11 +18,16 @@ public class PrecomputedStatistics implements Statistics {
 	public double getArithmeticMean() {
 		return mean;
 	}
+
+	@Override
+	public long getSampleCount() {
+		return count;
+	}
 	
 	@Override
 	public String toString() {
 		return String.format("Statistics(size=%d, mean=%2.2f)",
-				len, mean);
+				count, mean);
 	}
 
 	/**
