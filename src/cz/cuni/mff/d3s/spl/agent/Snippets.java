@@ -38,11 +38,9 @@ public class Snippets {
 			return;
 		}
 		long now = System.nanoTime();
-		long runLengthNanos = (now - startTime);
-		long nowMillis = System.currentTimeMillis();
 		
 		String id = InstrumentingDataSource.createId(sc.thisClassName(), sc.thisMethodName());
 		SampleStorage storage = Access.getSampleStorage(id);
-		storage.add(runLengthNanos, nowMillis);
+		storage.addFromNanoTimeRange(startTime, now);
 	}
 }
