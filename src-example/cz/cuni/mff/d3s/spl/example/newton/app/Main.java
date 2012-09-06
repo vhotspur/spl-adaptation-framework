@@ -28,7 +28,7 @@ public class Main {
 		PolynomialFunction function = new PolynomialFunction(coefficients);
 		NewtonSolver solver = new NewtonSolver();
 		
-		System.out.printf("Will solve polynomila function of degree %d.\n", function.degree());
+		System.out.printf("Will solve polynomial function of degree %d.\n", function.degree());
 			
 		try {
 			for (int i = 0; i < WARM_UP_LOOPS; i++) {
