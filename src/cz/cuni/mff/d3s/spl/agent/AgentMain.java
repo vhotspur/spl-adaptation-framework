@@ -26,6 +26,14 @@ public class AgentMain {
 				splThread.start();
 			}
 		}
+		String splShutdownClass = arguments.getValue("spl.shutdown.class", null);
+		if (splShutdownClass != null) {
+			Runnable instance = loadSplClass(splShutdownClass);
+			if (instance != null) {
+				Thread thread = new Thread(instance);
+				Runtime.getRuntime().addShutdownHook(thread);
+			}
+		}
 	}
 	
 	/** Instantiate checking class. */
