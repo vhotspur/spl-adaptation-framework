@@ -49,7 +49,6 @@ public class InstrumentingDataSource {
 	}
 
 	public static String createId(String classname, String methodname) {
-		return String.format("INSTRUMENT:%s#%s", classname.replace('/', '.'),
-				methodname);
+		return "INSTRUMENT:" + classname.replace('/', '.') + "#" + methodname;
 	}
 }
