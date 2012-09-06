@@ -1,6 +1,5 @@
 package cz.cuni.mff.d3s.spl.core.data.storage;
 
-import java.util.Collections;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -17,14 +16,13 @@ public class InMemorySamples implements SampleStorage {
 	}
 
 	@Override
-	public void add(long sample, long clock) {
+	public synchronized void add(long sample, long clock) {
 		data.put(clock, sample);
 	}
 
 	@Override
-	public SortedMap<Long, Long> get(long startTime, long endTime) {
-		return Collections.unmodifiableSortedMap(data
-				.subMap(startTime, endTime));
+	public synchronized SortedMap<Long, Long> get(long startTime, long endTime) {
+		return new TreeMap<>(data.subMap(startTime, endTime));
 	}
 	
 	@Override
