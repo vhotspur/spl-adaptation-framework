@@ -13,6 +13,17 @@ public interface SampleStorage {
 	 *            Wall clock time the sample was collected.
 	 */
 	void add(long sample, long clock);
+	
+	/**
+	 * Add a new sample from a range.
+	 * 
+	 * The provided times has to be acquired by call to System.nanoTime()
+	 * to allow correct conversion to a wall clock time.
+	 * 
+	 * @param startTimeNanos Nano time the event started.
+	 * @param endTimeNanos Nano time the event ended.
+	 */
+	void addFromNanoTimeRange(long startTimeNanos, long endTimeNanos);
 
 	/**
 	 * Get view on the samples at particular time slot.
