@@ -64,6 +64,8 @@ public class Access {
 		agent.instrument(className, methodName);
 	}
 	
+	public static int counter = 0;
+	
 	/** Guard method for DiSL.
 	 * 
 	 * This method is not intended for public usage.

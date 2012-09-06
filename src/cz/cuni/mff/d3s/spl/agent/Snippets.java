@@ -10,27 +10,39 @@ import ch.usi.dag.disl.staticcontext.MethodStaticContext;
 
 public class Snippets {
 	@SyntheticLocal
+	private static final int SKIP_COUNT = 100;
+	
+	@SyntheticLocal
 	private static long startTime = 0;
+	
+	/** Whether to skip current measurement. */
+	@SyntheticLocal
+	private static boolean skip = false;
 
 	@Before(marker = BodyMarker.class, guard = Access.class)
 	public static void startMeasuring() {
+		Access.counter++;
+		if (Access.counter < SKIP_COUNT) {
+			skip = true;
+			return;
+		} else {
+			Access.counter = 0;
+		}
 		startTime = System.nanoTime();
 	}
 
 	@After(marker = BodyMarker.class, guard = Access.class)
 	public static void endMeasureAnnounceResults(MethodStaticContext sc) {
-		try {
-			long now = System.nanoTime();
-			long runLengthNanos = (now - startTime);
-			long nowMillis = System.currentTimeMillis();
-			
-			// String probeName = sc.thisMethodFullName().replace('.', '#').replace('/', '.');
-			// System.err.printf("%s runs for %dns (started at %dms since epoch).\n", probeName, runLengthNanos, nowMillis);
-			
-			SampleStorage storage = Access.getSampleStorage(InstrumentingDataSource.createId(sc.thisClassName(), sc.thisMethodName()));
-			storage.add(runLengthNanos, nowMillis);
-		} catch (Throwable t) {
-			t.printStackTrace();
+		if (skip) {
+			skip = false;
+			return;
 		}
+		long now = System.nanoTime();
+		long runLengthNanos = (now - startTime);
+		long nowMillis = System.currentTimeMillis();
+		
+		String id = InstrumentingDataSource.createId(sc.thisClassName(), sc.thisMethodName());
+		SampleStorage storage = Access.getSampleStorage(id);
+		storage.add(runLengthNanos, nowMillis);
 	}
 }
