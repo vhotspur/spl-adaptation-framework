@@ -97,5 +97,20 @@
 			<jvmarg value="-ea" />
 		</java>
 	</target>
+	
+	<target name="compare-newton" depends="pack-agent,compile-example">
+		<echo level="info" message="===> Running without agent..." />
+		<java classname="cz.cuni.mff.d3s.spl.example.newton.app.Main" fork="true">
+			<classpath refid="classpath" />
+			<jvmarg value="-ea" />
+		</java>
+		
+		<echo level="info" message="===> Running with agent..." />
+		<java classname="cz.cuni.mff.d3s.spl.example.newton.app.Main" fork="true">
+			<classpath refid="classpath" />
+			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker" />
+			<jvmarg value="-ea" />
+		</java>		
+	</target>
 		
 </project>
