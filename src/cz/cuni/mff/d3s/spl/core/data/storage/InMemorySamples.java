@@ -31,7 +31,7 @@ public class InMemorySamples implements SampleStorage {
 	@Override
 	public void addFromNanoTimeRange(long startTimeNanos, long endTimeNanos) {
 		long diff = endTimeNanos - startTimeNanos;
-		long clock = startTimeNanos / MS_TO_NS + milliTimeNanoTimeOffset;
+		long clock = startTimeNanos / MS_TO_NS - milliTimeNanoTimeOffset;
 		add(diff, clock);
 	}
 
