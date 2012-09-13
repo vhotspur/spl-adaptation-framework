@@ -53,8 +53,6 @@ public class SlaFormula {
 		public Result evaluate() {
 			Statistics stats = source.get();
 			
-			System.err.printf("Have %d samples.\n", stats.getSampleCount());
-			
 			if (stats.getSampleCount() < MIN_SAMPLE_COUNT) {
 				return Result.CANNOT_COMPUTE;
 			}
