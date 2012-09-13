@@ -56,7 +56,8 @@ class InstrumentationDaemon implements Runnable {
 		methodsToInstrument = new HashSet<>();
 
 		instrumentation = instr;
-		transformer = new Transformer(Snippets.class);
+		transformer = new Transformer(NoReloadSnippets.class);
+		transformer.enableTransformation();
 		instrumentation.addTransformer(transformer, true);
 	}
 
@@ -174,6 +175,9 @@ class InstrumentationDaemon implements Runnable {
 			 * happening asynchronously.
 			 */
 			try {
+				if (true) {
+					continue;
+				}
 				instrumentation.retransformClasses(classToTransform);
 			} catch (UnmodifiableClassException e) {
 				reportException(e, "retransformation failed.");

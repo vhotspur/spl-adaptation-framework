@@ -64,6 +64,15 @@ public class Access {
 		agent.instrument(className, methodName);
 	}
 	
+	public static void enableInstrumentation(Class<?> klass) {
+		try {
+			klass.getDeclaredField("$DISL_measureThisClass").set(null, true);
+		} catch (IllegalArgumentException | IllegalAccessException
+				| NoSuchFieldException | SecurityException ignored) {
+			/* Do nothing. */
+		}		
+	}
+	
 	public static int counter = 0;
 	
 	/** Guard method for DiSL.
