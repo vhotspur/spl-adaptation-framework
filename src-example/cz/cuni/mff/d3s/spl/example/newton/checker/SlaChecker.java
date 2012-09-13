@@ -29,7 +29,7 @@ public class SlaChecker implements Runnable {
 		System.out.flush();
 		System.err.flush();
 		
-		System.err.printf(
+		System.out.printf(
 				"NewtonSolver.solve(): mean is %2.1fns, %d samples: %s.\n",
 				stats.getArithmeticMean(), stats.getSampleCount(), result);
 	}
