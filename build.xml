@@ -17,6 +17,7 @@
 		<path location="${lib.dir}/asm-debug-all-4.0.jar" />
 		<path location="${lib.dir}/dislserver-unspec.jar" />
 		<path location="${lib.dir}/commons-math-2.2.jar" />
+		<path location="${lib.dir}/javassist.jar" />
 	</path>
 	
 	<target name="main" depends="pack-agent,compile-example">
