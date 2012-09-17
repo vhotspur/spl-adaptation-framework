@@ -23,6 +23,7 @@ public class AgentMain {
 			if (splClassInstance != null) {
 				Thread splThread = new Thread(splClassInstance);
 				splThread.setDaemon(true);
+				splThread.setName("SPL-user-start");
 				splThread.start();
 			}
 		}
@@ -31,6 +32,7 @@ public class AgentMain {
 			Runnable instance = loadSplClass(splShutdownClass);
 			if (instance != null) {
 				Thread thread = new Thread(instance);
+				thread.setName("SPL-user-shutdown");
 				Runtime.getRuntime().addShutdownHook(thread);
 			}
 		}

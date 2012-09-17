@@ -26,6 +26,7 @@ class InstrumentationDaemon implements Runnable {
 
 		Thread thread = new Thread(instance);
 		thread.setDaemon(true);
+		thread.setName("SPL-instrumentation-daemon");
 		thread.start();
 	}
 
