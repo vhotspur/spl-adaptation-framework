@@ -1,6 +1,5 @@
 package cz.cuni.mff.d3s.spl.agent;
 
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.URL;
 import java.security.ProtectionDomain;
@@ -11,11 +10,8 @@ import ch.usi.dag.disl.DiSL;
 import ch.usi.dag.disl.exception.DiSLException;
 
 /** DiSL based instrumentation transformer. */ 
-class Transformer implements ClassFileTransformer {
+class Transformer extends SplTransformer {
 	private DiSL disl;
-	private boolean actuallyTransform = false;
-	private Set<String> preventInstrumentation = new HashSet<>();
-
 	
 	/** Create new transformer with a snippet class.
 	 * 
@@ -49,44 +45,24 @@ class Transformer implements ClassFileTransformer {
 		URL resource = cls.getClassLoader().getResource(filename);
 		return resource.toString();
 	}
-	
-	/** Prevent transformation of given class.
-	 * 
-	 * The class name can use either dots or slashes to separate package
-	 * names.
-	 * 
-	 * @param className Full class name, without wildcards.
-	 */
-	public void preventTransformationOnClass(String className) {
-		preventInstrumentation.add(className.replace('.', '/'));
-	}
-
-	/** Enable transformations from now on. */
-	public void enableTransformation() {
-		actuallyTransform = true;
-	}
 
 	/** Transform the class with DiSL. */
 	@Override
 	public byte[] transform(ClassLoader loader, String classname,
 			Class<?> theClass, ProtectionDomain domain, byte[] bytecode)
 			throws IllegalClassFormatException {
-		Access.registerClassLoader(loader);
+		System.err.printf("transform(\"%s\", %s)\n", classname, theClass);
+		boolean okayToContinue = beforeTransform(loader, classname);
+		if (!okayToContinue) {
+			return null;
+		}
 		
 		try {
-			if (preventInstrumentation.contains(classname)) {
-				return bytecode;
-			}
-			
-			if (actuallyTransform) {
-				return disl.instrument(bytecode);
-			} else {		
-				return bytecode;
-			}
+			return disl.instrument(bytecode);
 		} catch (Throwable e) {
 			System.err.printf("DiSL instrumentation failed:\n");
 			e.printStackTrace();
-			return bytecode;
+			return null;
 		}
 	}
 }

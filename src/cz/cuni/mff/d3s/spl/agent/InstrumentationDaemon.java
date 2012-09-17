@@ -1,7 +1,6 @@
 package cz.cuni.mff.d3s.spl.agent;
 
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -42,7 +41,7 @@ class InstrumentationDaemon implements Runnable {
 	private BlockingQueue<Class<?>> classesToReload;
 
 	/** Class transformer to use. */
-	private Transformer transformer;
+	private SplTransformer transformer;
 
 	/** Instrumentation service to use. */
 	private Instrumentation instrumentation;
@@ -58,7 +57,7 @@ class InstrumentationDaemon implements Runnable {
 
 		instrumentation = instr;
 		transformer = new Transformer(NoReloadSnippets.class);
-		transformer.enableTransformation();
+		transformer.enable();
 		instrumentation.addTransformer(transformer, true);
 	}
 
@@ -167,7 +166,7 @@ class InstrumentationDaemon implements Runnable {
 			/*
 			 * Enable the actual transformation.
 			 */
-			transformer.enableTransformation();
+			transformer.enable();
 
 			/*
 			 * Run the actual transformation.
@@ -180,7 +179,7 @@ class InstrumentationDaemon implements Runnable {
 					continue;
 				}
 				instrumentation.retransformClasses(classToTransform);
-			} catch (UnmodifiableClassException e) {
+			} catch (Exception e) {
 				reportException(e, "retransformation failed.");
 			}
 		}
