@@ -14,6 +14,8 @@ public class AgentMain {
 		 * This class causes java.lang.ClassCircularityError.
 		 */
 		Access.preventClassInstrumentation("com/sun/org/apache/xml/internal/dtm/DTMManager");
+		
+		InstrumentationDaemon.getInstance().enableTransformation();
 				
 		final AgentArgumentParser arguments = AgentArgumentParser.create(args);
 		

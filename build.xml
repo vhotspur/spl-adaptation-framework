@@ -88,6 +88,7 @@
 			<classpath refid="classpath" />
 			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.class=cz.cuni.mff.d3s.spl.example.checksla.checker.SlaChecker" />
 			<jvmarg value="-ea" />
+			<jvmarg value="-noverify" />
 		</java>
 	</target>
 	
@@ -96,6 +97,7 @@
 			<classpath refid="classpath" />
 			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker" />
 			<jvmarg value="-ea" />
+			<jvmarg value="-noverify" />
 		</java>
 	</target>
 	

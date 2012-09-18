@@ -26,7 +26,7 @@ public abstract class SplTransformer implements ClassFileTransformer {
 		transformationEnabled = true;
 	}
 	
-	protected final boolean beforeTransform(ClassLoader loader,
+	protected final synchronized boolean beforeTransform(ClassLoader loader,
 			String classname) {
 		if (!transformationEnabled) {
 			return false;

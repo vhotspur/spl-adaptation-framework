@@ -33,6 +33,10 @@ class InstrumentationDaemon implements Runnable {
 	public static InstrumentationDaemon getInstance() {
 		return instance;
 	}
+	
+	public void enableTransformation() {
+		transformer.enable();
+	}
 
 	/** Class-loaders to use when reloading a class. */
 	private Set<ClassLoader> knownClassLoaders;
@@ -56,8 +60,7 @@ class InstrumentationDaemon implements Runnable {
 		methodsToInstrument = new HashSet<>();
 
 		instrumentation = instr;
-		transformer = new Transformer(NoReloadSnippets.class);
-		transformer.enable();
+		transformer = new JavassistTransformer();
 		instrumentation.addTransformer(transformer, true);
 	}
 
@@ -175,9 +178,6 @@ class InstrumentationDaemon implements Runnable {
 			 * happening asynchronously.
 			 */
 			try {
-				if (true) {
-					continue;
-				}
 				instrumentation.retransformClasses(classToTransform);
 			} catch (Exception e) {
 				reportException(e, "retransformation failed.");
