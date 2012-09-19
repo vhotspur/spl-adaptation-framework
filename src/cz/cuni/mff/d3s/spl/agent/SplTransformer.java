@@ -1,8 +1,6 @@
 package cz.cuni.mff.d3s.spl.agent;
 
 import java.lang.instrument.ClassFileTransformer;
-import java.lang.instrument.IllegalClassFormatException;
-import java.security.ProtectionDomain;
 import java.util.HashSet;
 import java.util.Set;
 

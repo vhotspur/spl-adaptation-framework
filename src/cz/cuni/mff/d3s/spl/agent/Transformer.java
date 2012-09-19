@@ -3,8 +3,6 @@ package cz.cuni.mff.d3s.spl.agent;
 import java.lang.instrument.IllegalClassFormatException;
 import java.net.URL;
 import java.security.ProtectionDomain;
-import java.util.HashSet;
-import java.util.Set;
 
 import ch.usi.dag.disl.DiSL;
 import ch.usi.dag.disl.exception.DiSLException;
