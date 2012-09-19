@@ -159,6 +159,14 @@ class InstrumentationDaemon implements Runnable {
 	/** Wait for requests for instrumentation a execute them. */
 	@Override
 	public void run() {
+		try {
+			runImplementation();
+		} catch (Throwable t) {
+			reportException(t, "unexpectedly terminated (%s)", t.getMessage());
+		}
+	}
+		
+	private void runImplementation() {
 		while (true) {
 			Class<?> classToTransform;
 
@@ -187,13 +195,13 @@ class InstrumentationDaemon implements Runnable {
 			try {
 				instrumentation.retransformClasses(classToTransform);
 			} catch (Exception e) {
-				reportException(e, "retransformation failed.");
+				reportException(e, "retransformation of %s failed.", classToTransform.getName());
 			}
 		}
 	}
 
 	/** Convenient wrapper for reporting exceptions in a unified way. */
-	private void reportException(Exception e, String msg, Object... args) {
+	private void reportException(Throwable e, String msg, Object... args) {
 		System.err.printf("InstrumentationDaemon: " + msg + "\n", args);
 		e.printStackTrace(System.err);
 	}
