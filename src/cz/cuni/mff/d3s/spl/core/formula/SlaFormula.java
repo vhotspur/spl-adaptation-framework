@@ -41,6 +41,11 @@ public class SlaFormula {
 			limitNanos = limitNanosec;
 			test = new TTestImpl();
 		}
+		
+		@Override
+		public String toString() {
+			return String.format("SLA(%s < %dns)", source, limitNanos);
+		}
 
 		@Override
 		public void bind(String variable, DataSource data)
