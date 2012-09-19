@@ -2,12 +2,21 @@ package cz.cuni.mff.d3s.spl.agent;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 public abstract class SplTransformer implements ClassFileTransformer {
 
 	private boolean transformationEnabled = false;
 	private Set<String> preventInstrumentation = new HashSet<>();
+	private List<String> forbiddenPackages = new LinkedList<>();
+	
+	public SplTransformer() {
+		forbiddenPackages.add("java/");
+		forbiddenPackages.add("sun/");
+		forbiddenPackages.add("cz/cuni/mff/d3s/spl/agent/");
+	}
 	
 	/** Prevent transformation of given class.
 	 * 
@@ -34,6 +43,12 @@ public abstract class SplTransformer implements ClassFileTransformer {
 		
 		if (preventInstrumentation.contains(classname)) {
 			return false;
+		}
+		
+		for (String s : forbiddenPackages) {
+			if (classname.startsWith(s)) {
+				return false;
+			}
 		}
 		
 		return true;

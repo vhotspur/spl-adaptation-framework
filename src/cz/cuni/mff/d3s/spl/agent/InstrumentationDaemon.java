@@ -1,6 +1,8 @@
 package cz.cuni.mff.d3s.spl.agent;
 
+import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
+import java.security.ProtectionDomain;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +37,9 @@ class InstrumentationDaemon implements Runnable {
 	}
 	
 	public void enableTransformation() {
-		transformer.enable();
+		for (SplTransformer t : transformers) {
+			t.enable();
+		}
 	}
 
 	/** Class-loaders to use when reloading a class. */
@@ -44,8 +48,8 @@ class InstrumentationDaemon implements Runnable {
 	/** List of classes that shall be reloaded. */
 	private BlockingQueue<Class<?>> classesToReload;
 
-	/** Class transformer to use. */
-	private SplTransformer transformer;
+	/** Class transformers to use. */
+	private SplTransformer[] transformers;
 
 	/** Instrumentation service to use. */
 	private Instrumentation instrumentation;
@@ -60,8 +64,17 @@ class InstrumentationDaemon implements Runnable {
 		methodsToInstrument = new HashSet<>();
 
 		instrumentation = instr;
-		transformer = new JavassistTransformer();
-		instrumentation.addTransformer(transformer, true);
+		
+		JavassistInitialTransformer t0 = new JavassistInitialTransformer();
+		t0.addTransformer(new TransformerAddInstrumentationOnOffToClass());
+		JavassistRetransformingTransformer t1 = new JavassistRetransformingTransformer();
+		t1.addTransformer(new TransformerAddMeasuringCode());
+		
+		transformers = new SplTransformer[2];
+		transformers[0] = t0;
+		transformers[1] = t1;
+		instrumentation.addTransformer(transformers[0], false);
+		instrumentation.addTransformer(transformers[1], true);
 	}
 	
 	private void registerClassLoaderInternal(ClassLoader loader, boolean registerParent) {
@@ -120,7 +133,9 @@ class InstrumentationDaemon implements Runnable {
 	}
 	
 	public void preventInstrumentation(String className) {
-		transformer.preventTransformationOnClass(className);
+		for (SplTransformer t : transformers) {
+			t.preventTransformationOnClass(className);
+		}
 	}
 	
 	public synchronized boolean shallInstrument(String className, String methodName) {
@@ -184,7 +199,7 @@ class InstrumentationDaemon implements Runnable {
 			/*
 			 * Enable the actual transformation.
 			 */
-			transformer.enable();
+			enableTransformation();
 
 			/*
 			 * Run the actual transformation.
