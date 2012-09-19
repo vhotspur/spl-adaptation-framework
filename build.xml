@@ -34,7 +34,7 @@
 			basedir="${class.dir}"
 			includes="cz/cuni/mff/d3s/spl/agent/**,cz/cuni/mff/d3s/spl/core/**"
 		>
-			<zipgroupfileset dir="${lib.dir}" includes="**/*.jar" />
+			<zipgroupfileset dir="${lib.dir}" includes="**/javassist.jar" />
 			<manifest>
 				<attribute
 					name="Premain-Class"
@@ -88,7 +88,7 @@
 			<classpath refid="classpath" />
 			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.class=cz.cuni.mff.d3s.spl.example.checksla.checker.SlaChecker" />
 			<jvmarg value="-ea" />
-			<jvmarg value="-noverify" />
+			
 		</java>
 	</target>
 	
@@ -97,7 +97,6 @@
 			<classpath refid="classpath" />
 			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker" />
 			<jvmarg value="-ea" />
-			<jvmarg value="-noverify" />
 		</java>
 	</target>
 	
