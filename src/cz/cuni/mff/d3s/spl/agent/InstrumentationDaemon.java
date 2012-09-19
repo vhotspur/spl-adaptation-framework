@@ -1,8 +1,6 @@
 package cz.cuni.mff.d3s.spl.agent;
 
-import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
-import java.security.ProtectionDomain;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -65,14 +63,10 @@ class InstrumentationDaemon implements Runnable {
 
 		instrumentation = instr;
 		
-		JavassistInitialTransformer t0 = new JavassistInitialTransformer();
-		t0.addTransformer(new TransformerAddInstrumentationOnOffToClass());
-		JavassistRetransformingTransformer t1 = new JavassistRetransformingTransformer();
-		t1.addTransformer(new TransformerAddMeasuringCode());
-		
 		transformers = new SplTransformer[2];
-		transformers[0] = t0;
-		transformers[1] = t1;
+		transformers[0] = new JavassistInitialTransformer(new TransformerAddInstrumentationOnOffToClass());
+		transformers[1] = new JavassistRetransformingTransformer(new TransformerAddMeasuringCode());
+		
 		instrumentation.addTransformer(transformers[0], false);
 		instrumentation.addTransformer(transformers[1], true);
 	}

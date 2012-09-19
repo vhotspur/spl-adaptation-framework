@@ -1,6 +1,5 @@
 package cz.cuni.mff.d3s.spl.agent;
 
-import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
 
@@ -18,7 +17,7 @@ public class TransformerAddInstrumentationOnOffToClass implements
 		try {
 			CtField field = new CtField(CtClass.booleanType, ON_OFF_FIELD_NAME, klass);
 			klass.addField(field, "false");
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

@@ -3,29 +3,15 @@ package cz.cuni.mff.d3s.spl.agent;
 import java.io.IOException;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
 
-import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
-
-import javassist.ByteArrayClassPath;
 import javassist.CannotCompileException;
-import javassist.ClassPool;
 import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.NotFoundException;
 
 class JavassistInitialTransformer extends JavassistTransformer {
-	private List<JavassistFirstClassLoadTransformer> transformers;
+	private JavassistFirstClassLoadTransformer transformer = null;
 	
-	public JavassistInitialTransformer() {
-		transformers = new LinkedList<>();
-	}
-	
-	public void addTransformer(JavassistFirstClassLoadTransformer transformer) {
-		transformers.add(transformer);
+	public JavassistInitialTransformer(JavassistFirstClassLoadTransformer transformer) {
+		this.transformer = transformer;
 	}
 	
 	/** Transform the class. */
@@ -52,9 +38,7 @@ class JavassistInitialTransformer extends JavassistTransformer {
 			return null;
 		}
 		
-		for (JavassistFirstClassLoadTransformer t : transformers) {
-			t.transform(cc);
-		}
+		transformer.transform(cc);
 				
 		byte[] transformedBytecode;
 		try {

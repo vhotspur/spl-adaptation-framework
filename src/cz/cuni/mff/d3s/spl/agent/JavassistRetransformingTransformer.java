@@ -3,24 +3,17 @@ package cz.cuni.mff.d3s.spl.agent;
 import java.io.IOException;
 import java.lang.instrument.IllegalClassFormatException;
 import java.security.ProtectionDomain;
-import java.util.LinkedList;
-import java.util.List;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
 
 class JavassistRetransformingTransformer extends JavassistTransformer {
-	private List<JavassistInstrumentingTransformer> transformers;
+	private JavassistInstrumentingTransformer transformer;
 	
-	public JavassistRetransformingTransformer() {
-		transformers = new LinkedList<>();
+	public JavassistRetransformingTransformer(JavassistInstrumentingTransformer transformer) {
+		this.transformer = transformer;
 	}
-	
-	public void addTransformer(JavassistInstrumentingTransformer transformer) {
-		transformers.add(transformer);
-	}
-	
 	
 	/** Transform the class. */
 	@Override
@@ -55,9 +48,7 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 				continue;
 			}
 			
-			for (JavassistInstrumentingTransformer t : transformers) {
-				t.transform(m);
-			}
+			transformer.transform(m);
 		}
 		
 		byte[] transformedBytecode;
