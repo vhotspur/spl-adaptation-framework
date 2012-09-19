@@ -63,9 +63,8 @@ class InstrumentationDaemon implements Runnable {
 		transformer = new JavassistTransformer();
 		instrumentation.addTransformer(transformer, true);
 	}
-
-	/** Register a class loader. */
-	public void registerClassLoader(ClassLoader loader) {
+	
+	private void registerClassLoaderInternal(ClassLoader loader, boolean registerParent) {
 		if (loader == null) {
 			return;
 		}
@@ -76,9 +75,17 @@ class InstrumentationDaemon implements Runnable {
 		}
 
 		if (newLoader) {
+			if (registerParent) {
+				registerClassLoaderInternal(loader.getParent(), false);
+			}
 			System.out.printf("Registered class loader %s (parent = %s).\n",
 					loader, loader.getParent());
 		}
+	}
+
+	/** Register a class loader. */
+	public void registerClassLoader(ClassLoader loader) {
+		registerClassLoaderInternal(loader, true);
 	}
 
 	/**
