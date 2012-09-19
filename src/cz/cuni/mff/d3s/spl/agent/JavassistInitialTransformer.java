@@ -9,8 +9,10 @@ import javassist.CtClass;
 
 class JavassistInitialTransformer extends JavassistTransformer {
 	private JavassistFirstClassLoadTransformer transformer = null;
+	private InstrumentedMethods instrumentedMethods = null;
 	
-	public JavassistInitialTransformer(JavassistFirstClassLoadTransformer transformer) {
+	public JavassistInitialTransformer(InstrumentedMethods instrumentedMethods, JavassistFirstClassLoadTransformer transformer) {
+		this.instrumentedMethods = instrumentedMethods;
 		this.transformer = transformer;
 	}
 	

@@ -10,8 +10,10 @@ import javassist.CtMethod;
 
 class JavassistRetransformingTransformer extends JavassistTransformer {
 	private JavassistInstrumentingTransformer transformer;
+	private InstrumentedMethods instrumentedMethods = null;
 	
-	public JavassistRetransformingTransformer(JavassistInstrumentingTransformer transformer) {
+	public JavassistRetransformingTransformer(InstrumentedMethods instrumentedMethods, JavassistInstrumentingTransformer transformer) {
+		this.instrumentedMethods = instrumentedMethods;
 		this.transformer = transformer;
 	}
 	
@@ -36,15 +38,15 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 		}
 		
 		/* Instrument individual methods. */
-		InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
 		CtMethod[] methods = cc.getMethods();
 		for (CtMethod m : methods) {
 			/* Only methods declared here. */
 			if (!m.getLongName().startsWith(dotClassname)) {
 				continue;
 			}
+			
 			/* Shall we instrument this one? */
-			if (!agent.shallInstrument(dotClassname, m.getName())) {
+			if (!instrumentedMethods.instrumentMethod(dotClassname, m.getName())) {
 				continue;
 			}
 			

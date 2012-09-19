@@ -8,15 +8,8 @@ public class AgentMain {
 	/** Agent main method. */
 	public static void premain(String args,
 			Instrumentation instrumentation) throws Exception {
-		InstrumentationDaemon.create(instrumentation);
-
-		/*
-		 * This class causes java.lang.ClassCircularityError.
-		 */
-		Access.preventClassInstrumentation("com/sun/org/apache/xml/internal/dtm/DTMManager");
+		Instrumentator.initialize(instrumentation);
 		
-		InstrumentationDaemon.getInstance().enableTransformation();
-				
 		final AgentArgumentParser arguments = AgentArgumentParser.create(args);
 		
 		String splClass = arguments.getValue("spl.class", null);

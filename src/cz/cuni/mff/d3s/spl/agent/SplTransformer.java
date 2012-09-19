@@ -39,7 +39,7 @@ public abstract class SplTransformer implements ClassFileTransformer {
 			return false;
 		}
 		
-		Access.registerClassLoader(loader);
+		Instrumentator.registerClassLoader(loader);
 		
 		if (preventInstrumentation.contains(classname)) {
 			return false;

@@ -31,8 +31,7 @@ public class Access {
 	 * @param loader Class loader to register.
 	 */
 	public static void registerClassLoader(ClassLoader loader) {
-		InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
-		agent.registerClassLoader(loader);
+		Instrumentator.registerClassLoader(loader);
 	}
 	
 	/** Never instrument given class.
@@ -45,8 +44,8 @@ public class Access {
 	 * @param className Fully qualified class name.
 	 */
 	public static void preventClassInstrumentation(String className)  {
-		InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
-		agent.preventInstrumentation(className);
+		/*InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
+		agent.preventInstrumentation(className);*/
 	}
 	
 	/** Instrument given method.
@@ -60,17 +59,16 @@ public class Access {
 	 * @param methodName Method name (without argument specification).
 	 */
 	public static void instrumentMethod(String className, String methodName) {
-		InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
-		agent.instrument(className, methodName);
+		Instrumentator.instrument(className, methodName);
 	}
 	
 	public static void enableInstrumentation(Class<?> klass) {
-		try {
-			klass.getDeclaredField("$DISL_measureThisClass").set(null, true);
-		} catch (IllegalArgumentException | IllegalAccessException
-				| NoSuchFieldException | SecurityException ignored) {
+		//try {
+		//	klass.getDeclaredField("$DISL_measureThisClass").set(null, true);
+		//} catch (IllegalArgumentException | IllegalAccessException
+		//		| NoSuchFieldException | SecurityException ignored) {
 			/* Do nothing. */
-		}		
+		//}		
 	}
 	
 	public static int counter = 0;
@@ -84,8 +82,7 @@ public class Access {
 	 */
 	@GuardMethod
 	public static boolean shallInstrumentMethod(MethodStaticContext ctx) {		
-		InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
-		return agent.shallInstrument(ctx.thisClassName().replace('/', '.'),  ctx.thisMethodName());
+		return false;
 	}
 	
 	private static Map<String, SampleStorage> samples = new HashMap<>();
