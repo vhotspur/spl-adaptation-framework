@@ -6,6 +6,7 @@ import java.security.ProtectionDomain;
 
 import javassist.CannotCompileException;
 import javassist.CtClass;
+import javassist.CtMethod;
 
 class JavassistInitialTransformer extends JavassistTransformer {
 	private JavassistFirstClassLoadTransformer transformer = null;
@@ -40,7 +41,24 @@ class JavassistInitialTransformer extends JavassistTransformer {
 			return null;
 		}
 		
+		/* Instrument the class as a whole. */
 		transformer.transform(cc);
+		
+		/* Instrument individual methods. */
+		CtMethod[] methods = cc.getMethods();
+		for (CtMethod m : methods) {
+			/* Only methods declared here. */
+			if (!m.getLongName().startsWith(dotClassname)) {
+				continue;
+			}
+			
+			/* Shall we instrument this one? */
+			if (!instrumentedMethods.instrumentMethod(dotClassname, m.getName())) {
+				continue;
+			}
+			
+			transformer.transform(m);
+		}
 				
 		byte[] transformedBytecode;
 		try {

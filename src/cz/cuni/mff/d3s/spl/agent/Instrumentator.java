@@ -32,7 +32,7 @@ class Instrumentator {
 		
 		InstrumentedMethods accessor = new WhatToInstrument();
 		
-		loadingTransformer = new JavassistInitialTransformer(accessor, new TransformerAddInstrumentationOnOffToClass());
+		loadingTransformer = new JavassistInitialTransformer(accessor, new TransformerAddMeasurementPointFields());
 		instrumentingTransformer = new JavassistRetransformingTransformer(accessor, new TransformerAddMeasuringCode());
 		
 		instrumentationEngine.addTransformer(loadingTransformer, false);

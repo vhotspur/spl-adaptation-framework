@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.spl.agent;
 import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
 import javassist.CannotCompileException;
 import javassist.CtClass;
+import javassist.CtField;
 import javassist.CtMethod;
 import javassist.NotFoundException;
 
@@ -14,23 +15,40 @@ public class TransformerAddMeasuringCode implements
 	@Override
 	public void transform(CtMethod method) {
 		try {
+			CtClass klass = method.getDeclaringClass();
+			String pointVariable;
+			String pointVariableInitialization;
+			/*
+			 * CtClass has no method hasField(String fieldName) so we
+			 * replace the if-else block with try-catch.
+			 */
 			try {
-				CtClass measurementPointClass = method.getDeclaringClass().getClassPool().get("cz.cuni.mff.d3s.spl.core.data.MeasurementPoint");
-				method.addLocalVariable(PREFIX + "point", measurementPointClass);
+				String pointFieldName = JavassistTransformer.NEW_IDENTIFIERS_PREFIX + "point_" + method.getName();
+				
+				@SuppressWarnings("unused")
+				CtField ignore = klass.getField(pointFieldName);
+				pointVariable = pointFieldName;
+				pointVariableInitialization = "";
 			} catch (NotFoundException e) {
-				e.printStackTrace();
+				/* No such field, need to create local variable and initialize it. */
+				pointVariable = PREFIX + "point";
+				try {
+					CtClass measurementPointClass = method.getDeclaringClass().getClassPool().get("cz.cuni.mff.d3s.spl.core.data.MeasurementPoint");
+					method.addLocalVariable(pointVariable, measurementPointClass);
+				} catch (NotFoundException e2) {
+					e2.printStackTrace();
+				}
+				String dataSourceId = InstrumentingDataSource.createId(method.getDeclaringClass().getName(), method.getName());
+				pointVariableInitialization = PREFIX + "point = cz.cuni.mff.d3s.spl.agent.Access.getMeasurementPoint(\"" + dataSourceId + "\");";
 			}
 			method.addLocalVariable(PREFIX + "skip", CtClass.booleanType);
 			method.addLocalVariable(PREFIX + "startTime", CtClass.longType);
 			method.addLocalVariable(PREFIX + "endTime", CtClass.longType);
 			
-			
-			String dataSourceId = InstrumentingDataSource.createId(method.getDeclaringClass().getName(), method.getName());
-			
 			String codeBefore = "{"
 				//+ "System.err.print(\"BEFORE\\n\");"
-				+ PREFIX + "point = cz.cuni.mff.d3s.spl.agent.Access.getMeasurementPoint(\"" + dataSourceId + "\");"
-				+ PREFIX + "skip = ! " + PREFIX + "point.next();"
+				+ pointVariableInitialization
+				+ PREFIX + "skip = ! " + pointVariable + ".next();"
 				+ "if (" + PREFIX + "skip) {"
 				+ PREFIX + "startTime = 0;"
 				+ "} else {"
@@ -41,7 +59,7 @@ public class TransformerAddMeasuringCode implements
 				//+ "System.err.print(\"AFTER\\n\");"
 				+ "if (!" + PREFIX + "skip) {"
 				+ PREFIX + "endTime = System.nanoTime();"
-				+ PREFIX + "point.getStorage().addFromNanoTimeRange(" + PREFIX + "startTime, " + PREFIX + "endTime);"
+				+ pointVariable + ".getStorage().addFromNanoTimeRange(" + PREFIX + "startTime, " + PREFIX + "endTime);"
 				+ "}"
 				+ "}";
 			
