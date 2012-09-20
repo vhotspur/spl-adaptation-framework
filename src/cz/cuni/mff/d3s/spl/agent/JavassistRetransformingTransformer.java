@@ -64,6 +64,13 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 			return null;
 		}
 		
+		/*
+		 * Without detaching, subsequent calls to the default class pool
+		 * would return the already modified class.
+		 * This ensures that the class is created in a "fresh" copy.
+		 */
+		cc.detach();
+		
 		return transformedBytecode;
 	}
 }
