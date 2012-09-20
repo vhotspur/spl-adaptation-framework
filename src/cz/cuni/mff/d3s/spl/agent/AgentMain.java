@@ -1,6 +1,7 @@
 package cz.cuni.mff.d3s.spl.agent;
 
 import java.lang.instrument.Instrumentation;
+import java.lang.reflect.Constructor;
 
 /** Java agent for run-time instrumentation for SPL. */
 public class AgentMain {
@@ -33,25 +34,43 @@ public class AgentMain {
 		}
 	}
 	
-	/** Instantiate checking class. */
+	/** Instantiate checking class.
+	 * 
+	 * This method silently hides all errors.
+	 * 
+	 * @param classname Class name, possibly with argument (separated by colon).
+	 * @return Loaded class or null.
+	 */
 	private static Runnable loadSplClass(String classname) {
 		Class<?> klass;
+		String[] klassAndArgs = classname.split(":", 2);
 		try {
-			klass = Class.forName(classname);
+			klass = Class.forName(klassAndArgs[0]);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			return null;
 		}
-		Object instance;
+		Object instance = null;
+		/*
+		 * First try whether the class has constructor that accepts
+		 * String argument.
+		 * If that causes an exception, we will try to use the
+		 * default constructor.
+		 * Should that fail, we return null.
+		 */
 		try {
-			instance = klass.newInstance();
-		} catch (InstantiationException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-			return null;
+			Constructor<?> ctor = klass.getConstructor(String.class);
+			String arg = klassAndArgs.length == 1 ? null : klassAndArgs[1];
+			instance = ctor.newInstance(arg);
+		} catch (Exception ignored) {
+			/* Time to try the default constructor. */
+			try {
+				instance = klass.newInstance();
+			} catch (Exception e) {
+				return null;
+			}
 		}
+		
 		if (!(instance instanceof Runnable)) {
 			return null;
 		}
