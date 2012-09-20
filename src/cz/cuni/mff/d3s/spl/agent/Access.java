@@ -63,6 +63,10 @@ public class Access {
 		Instrumentator.instrument(className, methodName);
 	}
 	
+	public static void uninstrumentMethod(String className, String methodName) {
+		Instrumentator.uninstrument(className, methodName);
+	}
+	
 	public static void enableInstrumentation(Class<?> klass) {
 		//try {
 		//	klass.getDeclaredField("$DISL_measureThisClass").set(null, true);
