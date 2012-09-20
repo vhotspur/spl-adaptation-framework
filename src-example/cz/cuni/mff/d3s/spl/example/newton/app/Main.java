@@ -9,7 +9,6 @@ import org.apache.commons.math.MaxIterationsExceededException;
 import org.apache.commons.math.analysis.polynomials.PolynomialFunction;
 import org.apache.commons.math.analysis.solvers.NewtonSolver;
 
-import cz.cuni.mff.d3s.spl.agent.Access;
 
 public class Main {
 	public static final int MAX_POLYNOM_DEGREE = 10;
@@ -21,11 +20,6 @@ public class Main {
 	
 
 	public static void main(String[] args) {
-		boolean enableInstrumentation = true;
-		if ((args.length > 0) && args[0].equals("--no-meter")) { 
-			enableInstrumentation = false;
-		}
-		
 		try {
 			System.out.printf("Letting things settle down before actual computation.\n");
 			Thread.sleep(1000 * 1);
@@ -48,15 +42,12 @@ public class Main {
 				double result = solver.solve(10000, function, -1000, 1000);
 			}
 			
-			if (enableInstrumentation) {
-				Access.enableInstrumentation(solver.getClass());
-			}
-			
 			long startTimeNanos = System.nanoTime();
 			for (int i = 0; i < MEASURED_LOOPS; i++) {
 				double result = solver.solve(10000, function, -1000, 1000);
 			}
 			long endTimeNanos = System.nanoTime();
+			
 			long runTimeNanos = endTimeNanos - startTimeNanos;
 			long runTimeMillis = runTimeNanos / (1000 * 1000);
 			
