@@ -59,6 +59,7 @@ class Instrumentator {
 	
 	public static void uninstrument(String klass, String method) {
 		instrumentedMethods.remove(makeFullMethodName(klass, method));
+		reinstrument(klass);
 	}
 	
 	private static class WhatToInstrument implements InstrumentedMethods {
