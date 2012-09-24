@@ -18,7 +18,7 @@ case "$1" in
 		;;
 esac
 
-MY_CLASSPATH="out/classes:lib/asm-debug-all-4.0.jar:llib/dislserver-unspec.jar:lib/commons-math-2.2.jar"
+MY_CLASSPATH="out/classes:lib/asm-debug-all-4.0.jar:lib/commons-math-2.2.jar"
 
 TASKSET_=`which taskset 2>/dev/null`
 TASKSET="$TASKSET"

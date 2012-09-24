@@ -3,8 +3,6 @@ package cz.cuni.mff.d3s.spl.agent;
 import java.util.HashMap;
 import java.util.Map;
 
-import ch.usi.dag.disl.annotation.GuardMethod;
-import ch.usi.dag.disl.staticcontext.MethodStaticContext;
 import cz.cuni.mff.d3s.spl.core.data.MeasurementPoint;
 import cz.cuni.mff.d3s.spl.core.data.SampleStorage;
 import cz.cuni.mff.d3s.spl.core.data.storage.InMemorySamples;
@@ -67,15 +65,6 @@ public class Access {
 		Instrumentator.uninstrument(className, methodName);
 	}
 	
-	public static void enableInstrumentation(Class<?> klass) {
-		//try {
-		//	klass.getDeclaredField("$DISL_measureThisClass").set(null, true);
-		//} catch (IllegalArgumentException | IllegalAccessException
-		//		| NoSuchFieldException | SecurityException ignored) {
-			/* Do nothing. */
-		//}		
-	}
-	
 	private static Map<String, MeasurementPoint> measurements = new HashMap<>();
 	
 	public static MeasurementPoint getMeasurementPoint(String storageId) {
@@ -86,20 +75,6 @@ public class Access {
 			measurements.put(storageId, result);
 		}
 		return result;
-	}
-	
-	public static int counter = 0;
-	
-	/** Guard method for DiSL.
-	 * 
-	 * This method is not intended for public usage.
-	 * 
-	 * @param ctx Method static context.
-	 * @return Whether the given method shall be instrumented.
-	 */
-	@GuardMethod
-	public static boolean shallInstrumentMethod(MethodStaticContext ctx) {		
-		return false;
 	}
 	
 	private static Map<String, SampleStorage> samples = new HashMap<>();
