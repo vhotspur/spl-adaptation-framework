@@ -81,7 +81,8 @@ public class Access {
 	public static MeasurementPoint getMeasurementPoint(String storageId) {
 		MeasurementPoint result = measurements.get(storageId);
 		if (result == null) {
-			result = new MeasurementPoint(getSampleStorage(storageId), 100);
+			result = new MeasurementPoint(getSampleStorage(storageId),
+					Settings.DEFAULT_SKIP_FACTOR);
 			measurements.put(storageId, result);
 		}
 		return result;
