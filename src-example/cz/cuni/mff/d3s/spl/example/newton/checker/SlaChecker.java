@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.spl.example.newton.checker;
 
+import cz.cuni.mff.d3s.spl.agent.Access;
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
@@ -9,15 +10,23 @@ import cz.cuni.mff.d3s.spl.core.formula.SlaFormula;
 
 public class SlaChecker implements Runnable {
 
-	private final static String METHOD = "org.apache.commons.math.analysis.solvers.NewtonSolver#solve";
+	private final static String CLASS = "org.apache.commons.math.analysis.solvers.NewtonSolver";
+	private final static String METHOD = "solve";
 	private final static long SEC_TO_NANOS = 1000 * 1000 * 1000;
 
 	SerieDataSource source;
 	Formula sla;
 	
 	public SlaChecker() {
-		source = InstrumentingDataSource.create(METHOD);
+		source = InstrumentingDataSource.create(CLASS, METHOD);
 		sla = SlaFormula.createSimple(source, 1 * SEC_TO_NANOS);
+	}
+	
+	public SlaChecker(String args) {
+		this();
+		if (args.equals("no-measuring")) {
+			Access.uninstrumentMethod(CLASS, METHOD);
+		}
 	}
 
 	@Override
