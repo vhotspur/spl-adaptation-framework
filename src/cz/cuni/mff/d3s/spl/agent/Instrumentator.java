@@ -1,15 +1,11 @@
 package cz.cuni.mff.d3s.spl.agent;
 
 import java.lang.instrument.Instrumentation;
-import java.lang.instrument.UnmodifiableClassException;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 class Instrumentator {
@@ -87,8 +83,10 @@ class Instrumentator {
 			if (registerParent) {
 				registerClassLoaderInternal(loader.getParent(), false);
 			}
-			System.out.printf("Registered class loader %s (parent = %s).\n",
+			if (Settings.DEBUG_CLASSLOADERS) {
+				Settings.log.printf("Registered class loader %s (parent = %s).\n",
 					loader, loader.getParent());
+			}
 		}
 	}
 	
@@ -135,7 +133,7 @@ class Instrumentator {
 	}
 
 	private static void reportException(Throwable e, String msg, Object... args) {
-		System.err.printf("InstrumentationDaemon: " + msg + "\n", args);
+		Settings.log.printf("InstrumentationDaemon: " + msg + "\n", args);
 		e.printStackTrace(System.err);
 	}
 }
