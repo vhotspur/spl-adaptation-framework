@@ -50,6 +50,9 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 				continue;
 			}
 			
+			if (Settings.DEBUG_RETRANSFORMING_TRANSFORMER) {
+				Settings.log.printf("Retransforming method %s.\n", m.getLongName());
+			}
 			transformer.transform(m);
 		}
 		

@@ -23,8 +23,15 @@ public class AgentMain {
 			String[] what = arguments.getValue("debug", "all").split(":");
 			for (String debug : what) {
 				boolean all = debug.equalsIgnoreCase("all");
+				boolean allTransformers = all || debug.equals("transformer");
 				if (all || debug.equals("classloader")) {
 					Settings.DEBUG_CLASSLOADERS = true;
+				}
+				if (allTransformers || debug.equals("loading.transformer")) {
+					Settings.DEBUG_LOADING_TRANSFORMER = true;
+				}
+				if (allTransformers || debug.equals("retransforming.transformer")) {
+					Settings.DEBUG_RETRANSFORMING_TRANSFORMER = true;
 				}
 			}
 		}
