@@ -103,6 +103,10 @@ public class Access {
 	
 	private static Map<String, SampleStorage> samples = new HashMap<>();
 	
+	public static synchronized SampleStorage getSampleStorageNoCreate(String id) {
+		return samples.get(id);
+	}
+	
 	public static synchronized SampleStorage getSampleStorage(String id) {
 		SampleStorage result = samples.get(id);
 		if (result == null) {

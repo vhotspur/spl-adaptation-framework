@@ -1,9 +1,11 @@
 package cz.cuni.mff.d3s.spl.core.data.storage;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.SortedMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
+import cz.cuni.mff.d3s.spl.agent.Access;
 import cz.cuni.mff.d3s.spl.core.data.SampleStorage;
 
 /** Stores measured samples in memory. */
@@ -67,4 +69,17 @@ public class InMemorySamples implements SampleStorage {
 		return this.id.equals(other.id);
 	}
 
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.defaultWriteObject();
+	}
+
+	private void readObject(java.io.ObjectInputStream in) throws IOException,
+			ClassNotFoundException {
+		in.defaultReadObject();
+		InMemorySamples realOne = (InMemorySamples) Access
+				.getSampleStorageNoCreate(this.id);
+		if (realOne != null) {
+			this.data = realOne.data;
+		}
+	}
 }
