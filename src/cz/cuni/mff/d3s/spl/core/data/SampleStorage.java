@@ -1,9 +1,10 @@
 package cz.cuni.mff.d3s.spl.core.data;
 
+import java.io.Serializable;
 import java.util.SortedMap;
 
 /** Backend for storing samples of the performance random variable. */
-public interface SampleStorage {
+public interface SampleStorage extends Serializable {
 	/**
 	 * Add a new sample.
 	 * 
