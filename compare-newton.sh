@@ -13,5 +13,5 @@ run_measure() {
 }
 
 run_measure "Without any agent"
-run_measure "With agent, without measuring" --std-agent --no-meter
+run_measure "With agent, without measuring" --std-agent=no-measuring
 run_measure "With agent, with measuring" --std-agent
