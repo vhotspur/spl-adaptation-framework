@@ -42,6 +42,9 @@ class JavassistInitialTransformer extends JavassistTransformer {
 		}
 		
 		/* Instrument the class as a whole. */
+		if (Settings.DEBUG_LOADING_TRANSFORMER) {
+			Settings.log.printf("Transforming class %s (first load).\n", dotClassname);
+		}
 		transformer.transform(cc);
 		
 		/* Instrument individual methods. */
@@ -57,6 +60,9 @@ class JavassistInitialTransformer extends JavassistTransformer {
 				continue;
 			}
 			
+			if (Settings.DEBUG_LOADING_TRANSFORMER) {
+				Settings.log.printf("Transforming method %s (first load).\n", m.getLongName());
+			}	
 			transformer.transform(m);
 		}
 				

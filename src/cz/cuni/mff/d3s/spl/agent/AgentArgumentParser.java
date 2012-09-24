@@ -45,6 +45,10 @@ class AgentArgumentParser {
 		}
 	}
 	
+	public boolean hasOption(String key) {
+		return options.containsKey(key);
+	}
+	
 	/** Get string argument.
 	 * 
 	 * @param key Option (parameter) name.

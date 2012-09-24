@@ -13,6 +13,29 @@ public class AgentMain {
 		
 		final AgentArgumentParser arguments = AgentArgumentParser.create(args);
 		
+		if (arguments.hasOption("skip.factor")) {
+			int value = arguments.getValue("skip.factor", Settings.DEFAULT_SKIP_FACTOR);
+			if (value >= 0) {
+				Settings.DEFAULT_SKIP_FACTOR = value;
+			}
+		}
+		if (arguments.hasOption("debug")) {
+			String[] what = arguments.getValue("debug", "all").split(":");
+			for (String debug : what) {
+				boolean all = debug.equalsIgnoreCase("all");
+				boolean allTransformers = all || debug.equals("transformer");
+				if (all || debug.equals("classloader")) {
+					Settings.DEBUG_CLASSLOADERS = true;
+				}
+				if (allTransformers || debug.equals("loading.transformer")) {
+					Settings.DEBUG_LOADING_TRANSFORMER = true;
+				}
+				if (allTransformers || debug.equals("retransforming.transformer")) {
+					Settings.DEBUG_RETRANSFORMING_TRANSFORMER = true;
+				}
+			}
+		}
+		
 		String splClass = arguments.getValue("spl.class", null);
 		if (splClass != null) {
 			Runnable splClassInstance = loadSplClass(splClass);
