@@ -11,6 +11,7 @@
 	<property name="jar.dir" value="${build.dir}/jar" />
 	
 	<property name="agent.jar.file" value="spl-agent.jar" />
+	<property name="extra.agent.options" value="" />
 	
 	<path id="classpath">
 		<pathelement location="${class.dir}" />
@@ -85,7 +86,7 @@
 	<target name="run" depends="pack-agent,compile-example">
 		<java classname="cz.cuni.mff.d3s.spl.example.checksla.app.Main" fork="true">
 			<classpath refid="classpath" />
-			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.class=cz.cuni.mff.d3s.spl.example.checksla.checker.SlaChecker" />
+			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.class=cz.cuni.mff.d3s.spl.example.checksla.checker.SlaChecker,${extra.agent.options}" />
 			<jvmarg value="-ea" />
 			
 		</java>
@@ -94,7 +95,7 @@
 	<target name="newton" depends="pack-agent,compile-example">
 		<java classname="cz.cuni.mff.d3s.spl.example.newton.app.Main" fork="true">
 			<classpath refid="classpath" />
-			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker" />
+			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker,${extra.agent.options}" />
 			<jvmarg value="-ea" />
 		</java>
 	</target>
@@ -109,7 +110,7 @@
 		<echo level="info" message="===> Running with agent..." />
 		<java classname="cz.cuni.mff.d3s.spl.example.newton.app.Main" fork="true">
 			<classpath refid="classpath" />
-			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker" />
+			<jvmarg value="-javaagent:${jar.dir}/${agent.jar.file}=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker,${extra.agent.options}" />
 			<jvmarg value="-ea" />
 		</java>		
 	</target>
