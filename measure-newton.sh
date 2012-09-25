@@ -14,6 +14,10 @@ case "$1" in
 		EXTRA_OPTS="-javaagent:out/jar/spl-agent.jar=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker"
 		shift
 		;;
+	--std-agent-bare)
+		EXTRA_OPTS="-javaagent:out/jar/spl-agent.jar"
+		shift
+		;;
 	*)
 		;;
 esac
