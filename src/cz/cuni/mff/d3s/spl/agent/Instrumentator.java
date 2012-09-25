@@ -59,6 +59,17 @@ class Instrumentator {
 	}
 	
 	private static class WhatToInstrument implements InstrumentedMethods {
+		
+		public boolean instrumentClass(String classname) {
+			String 	prefix = makeFullMethodName(classname, "");
+			for (String method : instrumentedMethods) {
+				if (method.startsWith(prefix)) {
+					return true;
+				}
+			}
+			return false;
+		}
+		
 		@Override
 		public boolean instrumentMethod(String classname, String methodname) {
 			return instrumentedMethods.contains(makeFullMethodName(classname, methodname));

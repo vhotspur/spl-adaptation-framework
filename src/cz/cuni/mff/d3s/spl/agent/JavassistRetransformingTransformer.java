@@ -27,6 +27,11 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 		if (!continueTransformation) {
 			return null;
 		}
+		
+		/* Do nothing if there is no method to be instrumented. */
+		if (!instrumentedMethods.instrumentClass(classname)) {
+			return null;
+		}
 
 		/* Javassist uses dot-separated names. */
 		String dotClassname = classname.replace('/', '.');

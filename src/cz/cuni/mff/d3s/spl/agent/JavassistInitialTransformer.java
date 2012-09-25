@@ -31,6 +31,11 @@ class JavassistInitialTransformer extends JavassistTransformer {
 		if (theClass != null) {
 			return null;
 		}
+		
+		/* Do nothing if there is no method to be instrumented. */
+		if (!instrumentedMethods.instrumentClass(classname)) {
+			return null;
+		}
 
 		/* Javassist uses dot-separated names. */
 		String dotClassname = classname.replace('/', '.');
