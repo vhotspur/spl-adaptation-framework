@@ -1,8 +1,8 @@
 package cz.cuni.mff.d3s.spl.example.newton.checker;
 
-import cz.cuni.mff.d3s.spl.agent.Access;
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
+import cz.cuni.mff.d3s.spl.core.data.artificial.DummySerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
 import cz.cuni.mff.d3s.spl.core.formula.Formula;
 import cz.cuni.mff.d3s.spl.core.formula.Result;
@@ -18,15 +18,24 @@ public class SlaChecker implements Runnable {
 	Formula sla;
 	
 	public SlaChecker() {
-		source = InstrumentingDataSource.create(CLASS, METHOD);
-		sla = SlaFormula.createSimple(source, 1 * SEC_TO_NANOS);
+		init();
 	}
 	
 	public SlaChecker(String args) {
-		this();
 		if (args.equals("no-measuring")) {
-			Access.uninstrumentMethod(CLASS, METHOD);
+			init(new DummySerieDataSource());
+		} else {
+			init();
 		}
+	}
+	
+	private void init() {
+		init(InstrumentingDataSource.create(CLASS, METHOD));
+	}
+	
+	private void init(SerieDataSource originalSource) {
+		source = originalSource;
+		sla = SlaFormula.createSimple(source, 1 * SEC_TO_NANOS);
 	}
 
 	@Override
