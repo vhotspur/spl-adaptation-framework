@@ -7,6 +7,7 @@ import java.security.ProtectionDomain;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 
 class JavassistInitialTransformer extends JavassistTransformer {
 	private JavassistFirstClassLoadTransformer transformer = null;
@@ -22,6 +23,17 @@ class JavassistInitialTransformer extends JavassistTransformer {
 	public synchronized byte[] transform(ClassLoader loader, String classname,
 			Class<?> theClass, ProtectionDomain domain, byte[] bytecode)
 			throws IllegalClassFormatException {
+		try {
+			return throwingTransform(loader, classname, theClass, domain, bytecode);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+	
+	
+	private synchronized byte[] throwingTransform(ClassLoader loader, String classname,
+			Class<?> theClass, ProtectionDomain domain, byte[] bytecode) throws NotFoundException, IOException, CannotCompileException {	
 		boolean continueTransformation = beforeTransform(loader, classname, theClass);
 
 		if (!continueTransformation) {
@@ -48,12 +60,6 @@ class JavassistInitialTransformer extends JavassistTransformer {
 
 		/* Load the class and defrost it for transformation. */
 		CtClass cc = classFromBytecode(dotClassname, bytecode);
-		if (cc == null) {
-			if (Settings.DEBUG_WATCH_CLASS(classname)) {
-				Settings.log.printf("Failed to create bytecode of %s.\n", classname);
-			}
-			return null;
-		}
 		
 		/* Instrument the class as a whole. */
 		if (Settings.DEBUG_LOADING_TRANSFORMER) {
@@ -80,16 +86,7 @@ class JavassistInitialTransformer extends JavassistTransformer {
 			transformer.transform(m);
 		}
 				
-		byte[] transformedBytecode;
-		try {
-			transformedBytecode = cc.toBytecode();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (CannotCompileException e) {
-			e.printStackTrace();
-			return null;
-		}
+		byte[] transformedBytecode = cc.toBytecode();
 		
 		return transformedBytecode;
 	}

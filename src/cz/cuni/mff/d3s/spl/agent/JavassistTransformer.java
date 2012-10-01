@@ -19,17 +19,13 @@ abstract class JavassistTransformer extends SplTransformer {
 	 * @param bytecode
 	 *            Class bytecode.
 	 * @return Javassist class or null on error.
+	 * @throws NotFoundException Javassist engine was not able to load the class.
 	 */
-	protected CtClass classFromBytecode(String classname, byte[] bytecode) {
+	protected CtClass classFromBytecode(String classname, byte[] bytecode) throws NotFoundException {
 		ClassPool pool = ClassPool.getDefault();
 		pool.insertClassPath(new ByteArrayClassPath(classname, bytecode));
-		try {
-			CtClass cc = pool.get(classname);
-			cc.defrost();
-			return cc;
-		} catch (NotFoundException e) {
-			e.printStackTrace();
-			return null;
-		}
+		CtClass cc = pool.get(classname);
+		cc.defrost();
+		return cc;
 	}
 }

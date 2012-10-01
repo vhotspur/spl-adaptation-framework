@@ -7,6 +7,7 @@ import java.security.ProtectionDomain;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtMethod;
+import javassist.NotFoundException;
 
 class JavassistRetransformingTransformer extends JavassistTransformer {
 	private JavassistInstrumentingTransformer transformer;
@@ -19,9 +20,19 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 	
 	/** Transform the class. */
 	@Override
-	public synchronized byte[] transform(ClassLoader loader, String classname,
+	public byte[] transform(ClassLoader loader, String classname,
 			Class<?> theClass, ProtectionDomain domain, byte[] bytecode)
 			throws IllegalClassFormatException {
+		try {
+			return throwingTransform(loader, classname, theClass, domain, bytecode);
+		} catch (Throwable t) {
+			t.printStackTrace();
+			return null;
+		}
+	}
+		
+	private synchronized byte[] throwingTransform(ClassLoader loader, String classname,
+			Class<?> theClass, ProtectionDomain domain, byte[] bytecode) throws NotFoundException, IOException, CannotCompileException {
 		boolean continueTransformation = beforeTransform(loader, classname, theClass);
 
 		if (!continueTransformation) {
@@ -44,12 +55,6 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 
 		/* Load the class and defrost it for transformation. */
 		CtClass cc = classFromBytecode(dotClassname, bytecode);
-		if (cc == null) {
-			if (Settings.DEBUG_WATCH_CLASS(classname)) {
-				Settings.log.printf("Failed to create bytecode of %s.\n", classname);
-			}
-			return null;
-		}
 		
 		/* Instrument individual methods. */
 		CtMethod[] methods = cc.getMethods();
@@ -70,16 +75,7 @@ class JavassistRetransformingTransformer extends JavassistTransformer {
 			transformer.transform(m);
 		}
 		
-		byte[] transformedBytecode;
-		try {
-			transformedBytecode = cc.toBytecode();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
-		} catch (CannotCompileException e) {
-			e.printStackTrace();
-			return null;
-		}
+		byte[] transformedBytecode = cc.toBytecode();
 		
 		/*
 		 * Without detaching, subsequent calls to the default class pool
