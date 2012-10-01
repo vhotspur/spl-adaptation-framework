@@ -60,6 +60,7 @@ class Instrumentator {
 	
 	private static class WhatToInstrument implements InstrumentedMethods {
 		
+		@Override
 		public boolean instrumentClass(String classname) {
 			String 	prefix = makeFullMethodName(classname, "");
 			for (String method : instrumentedMethods) {
