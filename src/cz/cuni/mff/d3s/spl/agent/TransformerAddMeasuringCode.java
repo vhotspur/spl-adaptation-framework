@@ -5,6 +5,7 @@ import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
 import javassist.CtMethod;
+import javassist.Modifier;
 import javassist.NotFoundException;
 
 public class TransformerAddMeasuringCode implements
@@ -23,6 +24,10 @@ public class TransformerAddMeasuringCode implements
 			 * replace the if-else block with try-catch.
 			 */
 			try {
+				if (Modifier.isStatic(method.getModifiers())) {
+					throw new NotFoundException("Cannot use non-static fields in a static method.");
+				}
+				
 				String pointFieldName = JavassistTransformer.NEW_IDENTIFIERS_PREFIX + "point_" + method.getName();
 				
 				@SuppressWarnings("unused")
