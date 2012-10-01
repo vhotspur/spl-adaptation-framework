@@ -35,9 +35,9 @@ public abstract class SplTransformer implements ClassFileTransformer {
 	
 	protected final synchronized boolean beforeTransform(ClassLoader loader,
 			String classname, Class<?> klass) {
-		if (Settings.DEBUG_ALL_CLASS_LOADING) {
-			Settings.log.printf("Loading %s (%s @ %s).\n", classname,
-					klass, loader);
+		if (Settings.DEBUG_ALL_CLASS_LOADING || Settings.DEBUG_WATCH_CLASS(classname)) {
+			Settings.log.printf("%s: loading %s (%s @ %s).\n", this.getClass().getSimpleName(),
+					classname, klass, loader);
 		}
 
 		if (!transformationEnabled) {

@@ -6,6 +6,8 @@ import java.lang.reflect.Constructor;
 /** Java agent for run-time instrumentation for SPL. */
 public class AgentMain {
 	
+	private static String WATCH_CLASS_OPTION_PREFIX = "watch.class.";
+	
 	/** Agent main method. */
 	public static void premain(String args,
 			Instrumentation instrumentation) throws Exception {
@@ -35,6 +37,11 @@ public class AgentMain {
 				}
 				if (debug.equals("all.class.loading")) {
 					Settings.DEBUG_ALL_CLASS_LOADING = true;
+				}
+				if (debug.startsWith(WATCH_CLASS_OPTION_PREFIX)) {
+					String className = debug.substring(WATCH_CLASS_OPTION_PREFIX.length()).replace('.', '/');
+					Settings.DEBUG_WATCH_CLASSES = true;
+					Settings.WATCHED_CLASSES.add(className);
 				}
 			}
 		}

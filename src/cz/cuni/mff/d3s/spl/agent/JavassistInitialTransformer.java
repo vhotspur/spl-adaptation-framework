@@ -25,6 +25,9 @@ class JavassistInitialTransformer extends JavassistTransformer {
 		boolean continueTransformation = beforeTransform(loader, classname, theClass);
 
 		if (!continueTransformation) {
+			if (Settings.DEBUG_WATCH_CLASS(classname)) {
+				Settings.log.printf("Shall not continue in transformation of %s.\n", classname);
+			}
 			return null;
 		}
 		
@@ -34,6 +37,9 @@ class JavassistInitialTransformer extends JavassistTransformer {
 		
 		/* Do nothing if there is no method to be instrumented. */
 		if (!instrumentedMethods.instrumentClass(classname)) {
+			if (Settings.DEBUG_WATCH_CLASS(classname)) {
+				Settings.log.printf("No need to transform %s.\n", classname);
+			}
 			return null;
 		}
 
@@ -43,6 +49,9 @@ class JavassistInitialTransformer extends JavassistTransformer {
 		/* Load the class and defrost it for transformation. */
 		CtClass cc = classFromBytecode(dotClassname, bytecode);
 		if (cc == null) {
+			if (Settings.DEBUG_WATCH_CLASS(classname)) {
+				Settings.log.printf("Failed to create bytecode of %s.\n", classname);
+			}
 			return null;
 		}
 		
