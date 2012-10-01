@@ -22,7 +22,7 @@ class JavassistInitialTransformer extends JavassistTransformer {
 	public synchronized byte[] transform(ClassLoader loader, String classname,
 			Class<?> theClass, ProtectionDomain domain, byte[] bytecode)
 			throws IllegalClassFormatException {
-		boolean continueTransformation = beforeTransform(loader, classname);
+		boolean continueTransformation = beforeTransform(loader, classname, theClass);
 
 		if (!continueTransformation) {
 			return null;

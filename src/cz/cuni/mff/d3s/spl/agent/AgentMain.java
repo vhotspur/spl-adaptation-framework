@@ -33,6 +33,9 @@ public class AgentMain {
 				if (allTransformers || debug.equals("retransforming.transformer")) {
 					Settings.DEBUG_RETRANSFORMING_TRANSFORMER = true;
 				}
+				if (debug.equals("all.class.loading")) {
+					Settings.DEBUG_ALL_CLASS_LOADING = true;
+				}
 			}
 		}
 		
