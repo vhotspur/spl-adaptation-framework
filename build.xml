@@ -4,6 +4,7 @@
 
 	<property name="src.dir.main" value="src" />
 	<property name="src.dir.example" value="src-example" />
+	<property name="src.dir.test" value="src-test" />
 	<property name="lib.dir" value="lib" />
 	
 	<property name="build.dir" value="out" />
@@ -13,11 +14,19 @@
 	<property name="agent.jar.file" value="spl-agent.jar" />
 	<property name="extra.agent.options" value="" />
 	
+	<property name="junit.jar" value="junit-4.3.jar" />
+	<property name="junit.reports.dir" value="${build.dir}/junit" />
+	
 	<path id="classpath">
 		<pathelement location="${class.dir}" />
 		<path location="${lib.dir}/asm-debug-all-4.0.jar" />
 		<path location="${lib.dir}/commons-math-2.2.jar" />
 		<path location="${lib.dir}/javassist.jar" />
+	</path>
+	
+	<path id="test-classpath">
+		<path refid="classpath" />
+		<path location="${lib.dir}/${junit.jar}" />
 	</path>
 	
 	<target name="main" depends="pack-agent,compile-example">
@@ -72,6 +81,16 @@
 			<compilerarg value="-Xlint:all"/>
 		</javac>
 	</target>
+	<target name="compile-tests" depends="compile-agent">
+		<javac
+			srcdir="${src.dir.test}"
+			destdir="${class.dir}"
+			classpathref="test-classpath"
+			includeantruntime="false"
+		>
+			<compilerarg value="-Xlint:all"/>
+		</javac>
+	</target>
 	
 	<target name="doc">
 		<javadoc
@@ -81,6 +100,21 @@
 				<include name="cz/**"/>
 			</fileset>
 		</javadoc>
+	</target>
+	
+	<target name="test-junit" depends="compile-tests">
+		<mkdir dir="${junit.reports.dir}" />
+		<junit printsummary="no" haltonfailure="no" haltonerror="no" failureproperty="junit.failure">
+			<formatter type="brief" usefile="false" />
+			<formatter type="xml" />
+			<classpath refid="test-classpath" />
+			<batchtest fork="yes" todir="${junit.reports.dir}">
+				<fileset dir="${src.dir.test}">
+					<include name="**/*.java" />
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail if="junit.failure" message="Some of the unit tests failed." />
 	</target>
 	
 	<target name="run" depends="pack-agent,compile-example">
