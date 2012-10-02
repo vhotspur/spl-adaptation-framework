@@ -21,7 +21,25 @@ public class TransformerAddMeasurementPointFields implements
 	
 	@Override
 	public boolean shallTransformMethods(CtClass klass) {
-		return ! klass.isInterface();
+		if (klass.isInterface()) {
+			return false;
+		}
+		
+		CtClass[] interfaces;
+		try {
+			interfaces = klass.getInterfaces();
+		} catch (NotFoundException e) {
+			// FIXME: what to do with the error?
+			e.printStackTrace();
+			return false;
+		}
+		for (CtClass iface : interfaces) {
+			if (iface.getName().equals("java.io.Serializable")) {
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
