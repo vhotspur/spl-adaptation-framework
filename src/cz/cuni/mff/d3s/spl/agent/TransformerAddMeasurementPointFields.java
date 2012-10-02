@@ -18,14 +18,15 @@ public class TransformerAddMeasurementPointFields implements
 	public void transform(CtClass klass) {
 		/* Do nothing. */
 	}
+	
+	@Override
+	public boolean shallTransformMethods(CtClass klass) {
+		return ! klass.isInterface();
+	}
 
 	@Override
 	public void transform(CtMethod method) {
 		CtClass klass = method.getDeclaringClass();
-		if (klass.isInterface()) {
-			return;
-		}
-		
 		String dataSourceId = InstrumentingDataSource.createId(klass.getName(), method.getName());
 		String fieldName = MEASUREMENT_POINT_VARIABLE + method.getName();
 				

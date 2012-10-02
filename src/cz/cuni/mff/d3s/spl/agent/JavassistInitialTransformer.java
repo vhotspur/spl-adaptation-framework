@@ -67,16 +67,27 @@ class JavassistInitialTransformer extends JavassistTransformer {
 		}
 		transformer.transform(cc);
 		
-		/* Instrument individual methods. */
+		/* Transform methods. */
+		if (transformer.shallTransformMethods(cc)) {
+			transformMethods(cc);
+		}
+				
+		byte[] transformedBytecode = cc.toBytecode();
+		
+		return transformedBytecode;
+	}
+	
+	private void transformMethods(CtClass cc) {
+		String classname = cc.getName();
 		CtMethod[] methods = cc.getMethods();
 		for (CtMethod m : methods) {
 			/* Only methods declared here. */
-			if (!m.getLongName().startsWith(dotClassname)) {
+			if (!m.getLongName().startsWith(classname)) {
 				continue;
 			}
 			
 			/* Shall we instrument this one? */
-			if (!instrumentedMethods.instrumentMethod(dotClassname, m.getName())) {
+			if (!instrumentedMethods.instrumentMethod(classname, m.getName())) {
 				continue;
 			}
 			
@@ -85,9 +96,5 @@ class JavassistInitialTransformer extends JavassistTransformer {
 			}	
 			transformer.transform(m);
 		}
-				
-		byte[] transformedBytecode = cc.toBytecode();
-		
-		return transformedBytecode;
 	}
 }
