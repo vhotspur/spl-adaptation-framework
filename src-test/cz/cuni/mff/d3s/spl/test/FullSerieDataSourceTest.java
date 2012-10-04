@@ -6,7 +6,6 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 import cz.cuni.mff.d3s.spl.agent.Access;
-import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.core.data.artificial.ArtificialSerieDataSource;
 

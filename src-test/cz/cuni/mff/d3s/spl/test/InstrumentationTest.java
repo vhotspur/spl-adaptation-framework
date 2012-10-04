@@ -1,13 +1,10 @@
 package cz.cuni.mff.d3s.spl.test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import cz.cuni.mff.d3s.spl.agent.Access;
 import cz.cuni.mff.d3s.spl.agent.Settings;
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
