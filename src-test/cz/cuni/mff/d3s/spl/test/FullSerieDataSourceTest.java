@@ -1,9 +1,11 @@
 package cz.cuni.mff.d3s.spl.test;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import cz.cuni.mff.d3s.spl.agent.Access;
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.core.data.artificial.ArtificialSerieDataSource;
@@ -17,9 +19,14 @@ public class FullSerieDataSourceTest {
 	private Statistics emptySourceStatistics;
 	
 	@Before
-	public void setUp() {
+	public void createSource() {
 		source = new ArtificialSerieDataSource("junit.test");
 		emptySourceStatistics = source.get();
+	}
+	
+	@After
+	public void clearCollectedSamples() {
+		Access.clearAllSamples();
 	}
 	
 	@Test
