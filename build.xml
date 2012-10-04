@@ -17,6 +17,8 @@
 	<property name="junit.jar" value="junit-4.3.jar" />
 	<property name="junit.reports.dir" value="${build.dir}/junit" />
 	
+	<property name="jmockit.jar" value="jmockit-0.999.17.jar" />
+	
 	<path id="classpath">
 		<pathelement location="${class.dir}" />
 		<path location="${lib.dir}/asm-debug-all-4.0.jar" />
@@ -26,6 +28,7 @@
 	
 	<path id="test-classpath">
 		<path refid="classpath" />
+		<path location="${lib.dir}/${jmockit.jar}" />
 		<path location="${lib.dir}/${junit.jar}" />
 	</path>
 	
@@ -108,6 +111,11 @@
 			<formatter type="brief" usefile="false" />
 			<formatter type="xml" />
 			<classpath refid="test-classpath" />
+			<!--
+			Needed when using JMockit on java.lang.System.
+			http://virgo47.wordpress.com/2012/06/22/changing-system-time-in-java/
+			-->
+			<jvmarg value="-XX:-Inline" />
 			<batchtest fork="yes" todir="${junit.reports.dir}">
 				<fileset dir="${src.dir.test}">
 					<include name="**/*.java" />
