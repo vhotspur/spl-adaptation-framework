@@ -33,20 +33,6 @@ public class Access {
 		Instrumentator.registerClassLoader(loader);
 	}
 	
-	/** Never instrument given class.
-	 * 
-	 * The class name can use both dot or slash separated format when
-	 * specifying packages (i.e. both
-	 * <code>"java/lang/String"</code> and
-	 * <code>"java.lang.String"</code> is correct).
-	 * 
-	 * @param className Fully qualified class name.
-	 */
-	public static void preventClassInstrumentation(String className)  {
-		/*InstrumentationDaemon agent = InstrumentationDaemon.getInstance();
-		agent.preventInstrumentation(className);*/
-	}
-	
 	/** Instrument given method.
 	 * 
 	 * The instrumentation is scheduled to happen any time after call
