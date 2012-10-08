@@ -64,7 +64,7 @@ public class TransformerAddMeasuringCode implements
 				//+ "System.err.print(\"AFTER\\n\");"
 				+ "if (!" + PREFIX + "skip) {"
 				+ PREFIX + "endTime = System.nanoTime();"
-				+ pointVariable + ".getStorage().addFromNanoTimeRange(" + PREFIX + "startTime, " + PREFIX + "endTime);"
+				+ pointVariable + ".addFromNanoTimeRange(" + PREFIX + "startTime, " + PREFIX + "endTime);"
 				+ "}"
 				+ "}";
 			

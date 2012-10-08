@@ -1,6 +1,8 @@
 package cz.cuni.mff.d3s.spl.core.data;
 
-public final class MeasurementPoint {
+import java.util.SortedMap;
+
+public final class MeasurementPoint implements SampleStorage {
 	private int skipFactor;
 	private int skipCounter;
 	private SampleStorage storage;
@@ -24,7 +26,18 @@ public final class MeasurementPoint {
 		}
 	}
 	
-	public SampleStorage getStorage() {
-		return storage;
+	@Override
+	public void add(long sample, long clock) {
+		storage.add(sample, clock);
+	}
+
+	@Override
+	public void addFromNanoTimeRange(long startTimeNanos, long endTimeNanos) {
+		storage.addFromNanoTimeRange(startTimeNanos, endTimeNanos);
+	}
+
+	@Override
+	public SortedMap<Long, Long> get(long startTime, long endTime) {
+		return storage.get(startTime, endTime);
 	}
 }
