@@ -40,6 +40,10 @@ public class OriginalSerieDataSource implements SerieDataSource {
 				samples, getSamples().size());
 	}
 	
+	protected SampleStorage getStorage() {
+		return samples;
+	}
+	
 	private Collection<Long> getSamples() {
 		return samples.get(myStartTime, myEndTime).values();
 	}

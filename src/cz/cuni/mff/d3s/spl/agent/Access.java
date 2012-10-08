@@ -65,6 +65,13 @@ public class Access {
 	
 	private static Map<String, SampleStorage> samples = new HashMap<>();
 	
+	/**
+	 * Clear all stored samples. Use only for testing!
+	 */
+	public static synchronized void clearAllSamples() {
+		samples.clear();
+	}
+	
 	public static synchronized SampleStorage getSampleStorage(String id) {
 		SampleStorage result = samples.get(id);
 		if (result == null) {
