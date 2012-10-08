@@ -54,9 +54,18 @@ done
 rm -f $$.tmp
 AVG=`echo '(' "$SUM" ')/' "$LOOPS" | bc`
 STATS=`cat <<R_SCRIPT | Rscript --vanilla /dev/stdin
+format.stats <- function(x) {
+	x.mean <- mean(x, na.rm=TRUE)
+	x.sd <- sd(x, na.rm=TRUE)
+
+	sprintf(fmt="mean=%0.1fms (%0.2f)", x.mean, x.sd)
+}
+
 x <- c($DATA_VECTOR)
-x.mean <- mean(x, na.rm=TRUE)
-x.sd <- sd(x, na.rm=TRUE)
-writeLines(sprintf(fmt="Mean is %0.1fms (std.dev is %0.2f)", x.mean, x.sd), sep="")
+x.len <- length(x)
+x.part <- x[(x.len/5)+1:x.len]
+# print(x)
+# print(x.part)
+writeLines(sprintf(fmt="all: %s   skip first ones: %s", format.stats(x), format.stats(x.part)), sep="")
 R_SCRIPT`
 echo ">>>>> $STATS."
