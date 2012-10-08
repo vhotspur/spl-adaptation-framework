@@ -51,4 +51,13 @@ public class InstrumentingDataSource {
 	public static String createId(String classname, String methodname) {
 		return "INSTRUMENT:" + classname.replace('/', '.') + "#" + methodname;
 	}
+	
+	public static String createId(String fullMethodName) {
+		String parts[] = fullMethodName.split("#", 2);
+		if (parts.length != 2) {
+			throw new IllegalArgumentException(String.format(
+					"%s is not a valid method specification.", fullMethodName));
+		}
+		return createId(parts[0], parts[1]);
+	}
 }
