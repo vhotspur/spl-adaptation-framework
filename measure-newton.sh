@@ -7,7 +7,7 @@ shift
 
 case "$1" in
 	--std-agent=*)
-		EXTRA_OPTS="-javaagent:out/jar/spl-agent.jar=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker:`echo \"$1\" | cut '-d=' -f 2`"
+		EXTRA_OPTS="-javaagent:out/jar/spl-agent.jar=spl.shutdown.class=cz.cuni.mff.d3s.spl.example.newton.checker.SlaChecker:`echo \"$1\" | cut '-d=' -f 2-`"
 		shift
 		;;
 	--std-agent)
