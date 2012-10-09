@@ -43,7 +43,16 @@ public class SlidingTimeSlotDataSourceTest {
 	@Test
 	public void statisticsRecomputedAfterShift() {
 		source.shift(5);
-		/* 5 + 6 + .. + 14 */
-		assertStatisticsEqual(PrecomputedStatistics.create(9.5, 10), source.get(), EPSILON);
+		/* 5 + 6 + .. + 9 */
+		assertStatisticsEqual(PrecomputedStatistics.create(7.0, 5), source.get(), EPSILON);
+	}
+	
+	@Test
+	public void shiftCapturesInDifferentInterval() {
+		source.shift(5);
+		source.newSample(1, 12);
+		source.newSample(1, 9999);
+		/* 5 + 6 + .. + 9 + 15 */
+		assertStatisticsEqual(PrecomputedStatistics.create(6.0, 6), source.get(), EPSILON);
 	}
 }
