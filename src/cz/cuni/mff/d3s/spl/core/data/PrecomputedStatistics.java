@@ -6,6 +6,8 @@ import java.util.Collection;
 public class PrecomputedStatistics implements Statistics {
 	private double mean = 0.0;
 	private long count = 0;
+	
+	public static final PrecomputedStatistics empty = PrecomputedStatistics.create(Double.NaN, 0);
 
 	public static PrecomputedStatistics create(Collection<Long> samples) {
 		PrecomputedStatistics result = new PrecomputedStatistics();
@@ -47,7 +49,7 @@ public class PrecomputedStatistics implements Statistics {
 	 */
 	protected static double getSampleMean(Collection<Long> samples) {
 		if (samples.size() == 0) {
-			return 0.0;
+			return Double.NaN;
 		}
 		double sum = 0.0;
 		for (Long l : samples) {
