@@ -13,6 +13,9 @@ public class SlidingSlotDataSource implements SampleBasedDataSource {
 	
 	
 	public SlidingSlotDataSource(long start, long end) {
+		if (start > end) {
+			throw new IllegalArgumentException("It is forbidden to have `from > end'.");
+		}
 		clockStart = start;
 		clockEnd = end;
 	}
