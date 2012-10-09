@@ -1,5 +1,6 @@
 package cz.cuni.mff.d3s.spl.example.newton.checker;
 
+import cz.cuni.mff.d3s.spl.core.data.SampleBasedDataSource;
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.core.data.artificial.DummySerieDataSource;
@@ -14,7 +15,7 @@ public class SlaChecker implements Runnable {
 	private final static String METHOD = "solve";
 	private final static long SEC_TO_NANOS = 1000 * 1000 * 1000;
 
-	SerieDataSource source;
+	SampleBasedDataSource source;
 	Formula sla;
 	
 	public SlaChecker() {
@@ -30,10 +31,10 @@ public class SlaChecker implements Runnable {
 	}
 	
 	private void init() {
-		init(InstrumentingDataSource.create(CLASS, METHOD));
+		init(InstrumentingDataSource.createSampleBased(CLASS, METHOD));
 	}
 	
-	private void init(SerieDataSource originalSource) {
+	private void init(SampleBasedDataSource originalSource) {
 		source = originalSource;
 		sla = SlaFormula.createSimple(source, 1 * SEC_TO_NANOS);
 	}
