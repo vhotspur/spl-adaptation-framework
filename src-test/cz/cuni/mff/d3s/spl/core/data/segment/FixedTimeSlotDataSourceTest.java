@@ -22,7 +22,7 @@ public class FixedTimeSlotDataSourceTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void invalidInternalThrowsException() {
+	public void invalidIntervalThrowsException() {
 		new FixedTimeSlotDataSource(10, 9);
 	}
 	
