@@ -8,8 +8,8 @@ import cz.cuni.mff.d3s.spl.core.data.Statistics;
 @Ignore
 public class TestUtils {
 	
-	public static void assertStatisticsEqual(Statistics a, Statistics b, double delta) {
-		assertEquals(a.getArithmeticMean(), b.getArithmeticMean(), delta);
-		assertEquals(a.getSampleCount(), b.getSampleCount());
+	public static void assertStatisticsEqual(Statistics expected, Statistics actual, double delta) {
+		assertEquals(expected.getArithmeticMean(), actual.getArithmeticMean(), delta);
+		assertEquals(expected.getSampleCount(), actual.getSampleCount());
 	}
 }

@@ -3,11 +3,12 @@ package cz.cuni.mff.d3s.spl.test;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import static org.junit.Assert.*;
 
 import cz.cuni.mff.d3s.spl.agent.Access;
+import cz.cuni.mff.d3s.spl.core.data.PrecomputedStatistics;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.core.data.artificial.ArtificialSerieDataSource;
+import static cz.cuni.mff.d3s.spl.test.TestUtils.assertStatisticsEqual;
 
 public class FullSerieDataSourceTest {
 
@@ -30,16 +31,13 @@ public class FullSerieDataSourceTest {
 	
 	@Test
 	public void emptySourceTest() {
-		assertEquals(0, emptySourceStatistics.getSampleCount());
-		assertEquals(0.0, emptySourceStatistics.getArithmeticMean(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.empty, emptySourceStatistics, EPSILON);
 	}
 	
 	@Test
 	public void singleSampleMeanComputedCorrectly() {
 		source.addSample(10, 0);
-		Statistics stats = source.get();
-		assertEquals(1, stats.getSampleCount());
-		assertEquals(10.0, stats.getArithmeticMean(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.create(10.0, 1), source.get(), EPSILON);
 	}
 	
 	@Test
@@ -48,8 +46,7 @@ public class FullSerieDataSourceTest {
 		source.addSample( 5, 1 * MILLIS_TO_SEC);
 		source.addSample( 6, 2 * MILLIS_TO_SEC);
 		source.addSample(10, 3 * MILLIS_TO_SEC);
-		Statistics stats = source.get();
-		assertEquals(4, stats.getSampleCount());
-		assertEquals(6.5, stats.getArithmeticMean(), EPSILON);
+		
+		assertStatisticsEqual(PrecomputedStatistics.create(6.5, 4), source.get(), EPSILON);
 	}
 }

@@ -4,17 +4,15 @@ import org.junit.Test;
 
 import cz.cuni.mff.d3s.spl.core.data.DataSource;
 import cz.cuni.mff.d3s.spl.core.data.PrecomputedStatistics;
-import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.test.TestUtils;
 
 public class SlidingSlotDataSourceTest {
 
 	private final static double EPSILON = 0.0001;
-	private final Statistics emptyStatistics
-		= PrecomputedStatistics.create(Double.NaN, 0);
+
 	
 	private void assertSourceHasEmptyStatistics(DataSource source) {
-		TestUtils.assertStatisticsEqual(source.get(), emptyStatistics, EPSILON);
+		TestUtils.assertStatisticsEqual(source.get(), PrecomputedStatistics.empty, EPSILON);
 	}
 	
 	@Test
