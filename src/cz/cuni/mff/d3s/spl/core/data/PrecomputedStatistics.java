@@ -13,6 +13,13 @@ public class PrecomputedStatistics implements Statistics {
 		result.count = samples.size();
 		return result;
 	}
+	
+	public static PrecomputedStatistics create(double mean, long count) {
+		PrecomputedStatistics result = new PrecomputedStatistics();
+		result.mean = mean;
+		result.count = count;
+		return result;
+	}
 
 	@Override
 	public double getArithmeticMean() {
