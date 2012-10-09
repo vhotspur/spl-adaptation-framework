@@ -6,7 +6,7 @@ import cz.cuni.mff.d3s.spl.core.data.DataSource;
 import cz.cuni.mff.d3s.spl.core.data.PrecomputedStatistics;
 import cz.cuni.mff.d3s.spl.test.TestUtils;
 
-public class SlidingSlotDataSourceTest {
+public class FixedTimeSlotDataSourceTest {
 
 	private final static double EPSILON = 0.0001;
 
@@ -17,18 +17,18 @@ public class SlidingSlotDataSourceTest {
 	
 	@Test
 	public void emptySourceProducesEmptyStatistics() {
-		SlidingSlotDataSource empty = new SlidingSlotDataSource(0, 10);
+		FixedTimeSlotDataSource empty = new FixedTimeSlotDataSource(0, 10);
 		assertSourceHasEmptyStatistics(empty);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
 	public void invalidInternalThrowsException() {
-		new SlidingSlotDataSource(10, 9);
+		new FixedTimeSlotDataSource(10, 9);
 	}
 	
 	@Test
 	public void emptyIntervalSourceRemainsEmpty() {
-		SlidingSlotDataSource source = new SlidingSlotDataSource(10, 10);
+		FixedTimeSlotDataSource source = new FixedTimeSlotDataSource(10, 10);
 		assertSourceHasEmptyStatistics(source);
 		
 		source.newSample(10, 5);

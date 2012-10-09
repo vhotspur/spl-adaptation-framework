@@ -4,7 +4,7 @@ import cz.cuni.mff.d3s.spl.core.data.PrecomputedStatistics;
 import cz.cuni.mff.d3s.spl.core.data.SampleBasedDataSource;
 import cz.cuni.mff.d3s.spl.core.data.Statistics;
 
-public class SlidingSlotDataSource implements SampleBasedDataSource {
+public class FixedTimeSlotDataSource implements SampleBasedDataSource {
 
 	private long clockStart = Long.MIN_VALUE;
 	private long clockEnd = Long.MAX_VALUE;
@@ -12,7 +12,7 @@ public class SlidingSlotDataSource implements SampleBasedDataSource {
 	private double sampleSum = 0.0;
 	
 	
-	public SlidingSlotDataSource(long start, long end) {
+	public FixedTimeSlotDataSource(long start, long end) {
 		if (start > end) {
 			throw new IllegalArgumentException("It is forbidden to have `from > end'.");
 		}
