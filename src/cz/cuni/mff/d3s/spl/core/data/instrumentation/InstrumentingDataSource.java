@@ -1,8 +1,11 @@
 package cz.cuni.mff.d3s.spl.core.data.instrumentation;
 
 import cz.cuni.mff.d3s.spl.agent.Access;
+import cz.cuni.mff.d3s.spl.core.data.MeasurementPoint;
+import cz.cuni.mff.d3s.spl.core.data.SampleBasedDataSource;
 import cz.cuni.mff.d3s.spl.core.data.SampleStorage;
 import cz.cuni.mff.d3s.spl.core.data.SerieDataSource;
+import cz.cuni.mff.d3s.spl.core.data.storage.CompleteDataSource;
 import cz.cuni.mff.d3s.spl.core.data.storage.OriginalSerieDataSource;
 
 /**
@@ -10,6 +13,23 @@ import cz.cuni.mff.d3s.spl.core.data.storage.OriginalSerieDataSource;
  */
 public class InstrumentingDataSource {
 
+	public static SampleBasedDataSource createSampleBased(String classname, String methodname) {
+		classname = classname.replace('/', '.');
+		String id = createId(classname, methodname);
+		MeasurementPoint point = Access.getMeasurementPoint(id);
+		Access.instrumentMethod(classname, methodname);
+		return CompleteDataSource.createFromMeasurementPoint(point);
+	}
+	
+	public static SampleBasedDataSource createSampleBased(String fullMethodName) {
+		String parts[] = fullMethodName.split("#", 2);
+		if (parts.length != 2) {
+			throw new IllegalArgumentException(String.format(
+					"%s is not a valid method specification.", fullMethodName));
+		}
+		return createSampleBased(parts[0], parts[1]);
+	}
+	
 	/**
 	 * Create data source with automatic instrumentation.
 	 * 
