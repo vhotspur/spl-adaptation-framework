@@ -39,6 +39,7 @@ public class InstrumentingDataSource {
 	 *            Bare method name (without parameter specification).
 	 * @return Data source representing given method performance.
 	 */
+	@Deprecated
 	public static SerieDataSource create(String classname, String methodname) {
 		classname = classname.replace('/', '.');
 		String id = createId(classname, methodname);
@@ -59,6 +60,7 @@ public class InstrumentingDataSource {
 	 *            Full method name (packages + class + method).
 	 * @return Data source representing given method performance.
 	 */
+	@Deprecated
 	public static SerieDataSource create(String fullMethodName) {
 		String parts[] = fullMethodName.split("#", 2);
 		if (parts.length != 2) {

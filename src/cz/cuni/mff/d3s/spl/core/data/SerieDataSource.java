@@ -4,6 +4,7 @@ package cz.cuni.mff.d3s.spl.core.data;
  * Data source that binds individual samples with (wall-clock) time they were
  * obtained.
  */
+@Deprecated
 public interface SerieDataSource extends DataSource {
 	/**
 	 * Get partial view of the data source at given time segment.
