@@ -12,21 +12,23 @@ public class SlidingTimeSlotDataSourceTest {
 
 	private final static double EPSILON = 0.0001;
 	
-	private SlidingTimeSlotDataSource source;
+	private SlidingTimeSlotDataSource prefilledSource;
+	private SlidingTimeSlotDataSource emptySource;
 	
 	@Before
 	public void prepareSamples() {
-		source = new SlidingTimeSlotDataSource(0, 10);
+		prefilledSource = new SlidingTimeSlotDataSource(0, 10);
 		
 		for (int i = 0; i < 100; i++) {
-			source.newSample(i, i);
+			prefilledSource.newSample(i, i);
 		}
+		
+		emptySource = new SlidingTimeSlotDataSource(0, 10);
 	}
 	
 	@Test
 	public void emptySourceProducesEmptyStatistics() {
-		SampleBasedDataSource empty = new SlidingTimeSlotDataSource(0, 10);
-		assertStatisticsEqual(PrecomputedStatistics.empty, empty.get(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.empty, emptySource.get(), EPSILON);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -37,22 +39,22 @@ public class SlidingTimeSlotDataSourceTest {
 	@Test
 	public void testStatisticsComputedCorrectly() {
 		/* 0 + 1 + .. + 9 */
-		assertStatisticsEqual(PrecomputedStatistics.create(4.5, 10), source.get(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.create(4.5, 10), prefilledSource.get(), EPSILON);
 	}
 	
 	@Test
 	public void statisticsRecomputedAfterShift() {
-		source.shift(5);
+		prefilledSource.shift(5);
 		/* 5 + 6 + .. + 9 */
-		assertStatisticsEqual(PrecomputedStatistics.create(7.0, 5), source.get(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.create(7.0, 5), prefilledSource.get(), EPSILON);
 	}
 	
 	@Test
 	public void shiftCapturesInDifferentInterval() {
-		source.shift(5);
-		source.newSample(1, 12);
-		source.newSample(1, 9999);
+		prefilledSource.shift(5);
+		prefilledSource.newSample(1, 12);
+		prefilledSource.newSample(1, 9999);
 		/* 5 + 6 + .. + 9 + 15 */
-		assertStatisticsEqual(PrecomputedStatistics.create(6.0, 6), source.get(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.create(6.0, 6), prefilledSource.get(), EPSILON);
 	}
 }
