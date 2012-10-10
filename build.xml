@@ -107,6 +107,7 @@
 	
 	<target name="test-junit" depends="compile-tests,pack-agent">
 		<mkdir dir="${junit.reports.dir}" />
+		<echo message="==> Running JUnit tests..." />
 		<junit printsummary="no" haltonfailure="no" haltonerror="no" failureproperty="junit.failure">
 			<formatter type="brief" usefile="false" />
 			<formatter type="xml" />
@@ -123,6 +124,13 @@
 				</fileset>
 			</batchtest>
 		</junit>
+		<echo message="==> Generating JUnit report..." />
+		<junitreport todir="${junit.reports.dir}">
+			<fileset dir="${junit.reports.dir}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report todir="${junit.reports.dir}/html" format="frames" />
+		</junitreport>
 		<fail if="junit.failure" message="Some of the unit tests failed." />
 	</target>
 	
