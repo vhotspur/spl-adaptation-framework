@@ -1,9 +1,12 @@
 package cz.cuni.mff.d3s.spl.core.data;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 
-public class PrecomputedStatistics implements Statistics {
+public class PrecomputedStatistics implements Statistics, Serializable {
+	private static final long serialVersionUID = -8047285832373708558L;
+	
 	private double mean = 0.0;
 	private long count = 0;
 	
