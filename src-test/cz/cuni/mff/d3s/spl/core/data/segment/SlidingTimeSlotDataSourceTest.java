@@ -78,8 +78,11 @@ public class SlidingTimeSlotDataSourceTest {
 		source.newSample(120, 42);
 		assertStatisticsEqual(PrecomputedStatistics.create(107.5, 2), source.get(), EPSILON);
 		
-		/* Will be at <35, 45). */
+		/* Will be at <35, 45). Empty intersection with previous interval. */
 		source.shift(15);
-		assertStatisticsEqual(PrecomputedStatistics.create(42.0, 1), source.get(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.empty, source.get(), EPSILON);
+		
+		source.newSample(163, 39);
+		assertStatisticsEqual(PrecomputedStatistics.create(163.0, 1), source.get(), EPSILON);
 	}
 }
