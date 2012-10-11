@@ -80,6 +80,13 @@ public class SlidingTimeSlotDataSource implements SampleBasedDataSource {
 		throw new UnsupportedOperationException("Not implemented.");
 	}
 	
+	@Override
+	public String toString() {
+		String basic = String.format("SlidingTimeSlot<%d,%d)", clockStart, clockEnd);
+		StringBuilder result = new StringBuilder(basic);
+		return result.toString();
+	}
+	
 	private TickRecords getTickRecord(long clock) {
 		TickRecords rec = samples.get(clock);
 		if (rec == null) {
