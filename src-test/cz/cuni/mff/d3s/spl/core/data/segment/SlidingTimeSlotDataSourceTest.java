@@ -13,7 +13,7 @@ public class SlidingTimeSlotDataSourceTest {
 	private final static double EPSILON = 0.0001;
 	
 	private SlidingTimeSlotDataSource prefilledSource;
-	private SlidingTimeSlotDataSource emptySource;
+	private SlidingTimeSlotDataSource source;
 	
 	@Before
 	public void prepareSamples() {
@@ -23,12 +23,12 @@ public class SlidingTimeSlotDataSourceTest {
 			prefilledSource.newSample(i, i);
 		}
 		
-		emptySource = new SlidingTimeSlotDataSource(0, 10);
+		source = new SlidingTimeSlotDataSource(0, 10);
 	}
 	
 	@Test
 	public void emptySourceProducesEmptyStatistics() {
-		assertStatisticsEqual(PrecomputedStatistics.empty, emptySource.get(), EPSILON);
+		assertStatisticsEqual(PrecomputedStatistics.empty, source.get(), EPSILON);
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
@@ -52,9 +52,34 @@ public class SlidingTimeSlotDataSourceTest {
 	@Test
 	public void shiftCapturesInDifferentInterval() {
 		prefilledSource.shift(5);
+		prefilledSource.newSample(1, 0);
 		prefilledSource.newSample(1, 12);
 		prefilledSource.newSample(1, 9999);
 		/* 5 + 6 + .. + 9 + 15 */
 		assertStatisticsEqual(PrecomputedStatistics.create(6.0, 6), prefilledSource.get(), EPSILON);
+	}
+	
+	@Test
+	public void testMultipleShifts() {
+		source.newSample(1, 3);
+		source.newSample(2, 6);
+		source.newSample(3, 9);
+		source.newSample(4, 12);
+		assertStatisticsEqual(PrecomputedStatistics.create(2.0, 3), source.get(), EPSILON);
+		
+		/* Will be at <20, 30). */
+		source.shift(20);
+		assertStatisticsEqual(PrecomputedStatistics.empty, source.get(), EPSILON);
+		
+		/* Insert some data. */
+		source.newSample(100, 15);
+		source.newSample(105, 22);
+		source.newSample(110, 27);
+		source.newSample(120, 42);
+		assertStatisticsEqual(PrecomputedStatistics.create(107.5, 2), source.get(), EPSILON);
+		
+		/* Will be at <35, 45). */
+		source.shift(15);
+		assertStatisticsEqual(PrecomputedStatistics.create(42.0, 1), source.get(), EPSILON);
 	}
 }
