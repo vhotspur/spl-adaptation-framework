@@ -1,16 +1,28 @@
 package cz.cuni.mff.d3s.spl.core.data;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 
-public class PrecomputedStatistics implements Statistics {
+public class PrecomputedStatistics implements Statistics, Serializable {
+	private static final long serialVersionUID = -8047285832373708558L;
+	
 	private double mean = 0.0;
 	private long count = 0;
+	
+	public static final PrecomputedStatistics empty = PrecomputedStatistics.create(Double.NaN, 0);
 
 	public static PrecomputedStatistics create(Collection<Long> samples) {
 		PrecomputedStatistics result = new PrecomputedStatistics();
 		result.mean = getSampleMean(samples);
 		result.count = samples.size();
+		return result;
+	}
+	
+	public static PrecomputedStatistics create(double mean, long count) {
+		PrecomputedStatistics result = new PrecomputedStatistics();
+		result.mean = mean;
+		result.count = count;
 		return result;
 	}
 
@@ -40,7 +52,7 @@ public class PrecomputedStatistics implements Statistics {
 	 */
 	protected static double getSampleMean(Collection<Long> samples) {
 		if (samples.size() == 0) {
-			return 0.0;
+			return Double.NaN;
 		}
 		double sum = 0.0;
 		for (Long l : samples) {

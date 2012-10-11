@@ -3,6 +3,7 @@ package cz.cuni.mff.d3s.spl.core.data;
 import java.util.SortedMap;
 
 /** Backend for storing samples of the performance random variable. */
+@Deprecated
 public interface SampleStorage {
 	/**
 	 * Add a new sample.

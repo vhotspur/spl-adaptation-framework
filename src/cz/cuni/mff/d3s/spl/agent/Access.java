@@ -72,6 +72,7 @@ public class Access {
 		samples.clear();
 	}
 	
+	@Deprecated
 	public static synchronized SampleStorage getSampleStorage(String id) {
 		SampleStorage result = samples.get(id);
 		if (result == null) {

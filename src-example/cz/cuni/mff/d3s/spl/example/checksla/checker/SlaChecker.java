@@ -3,6 +3,9 @@ package cz.cuni.mff.d3s.spl.example.checksla.checker;
 import java.util.HashMap;
 import java.util.Map;
 
+import cz.cuni.mff.d3s.spl.agent.Access;
+import cz.cuni.mff.d3s.spl.core.data.SampleBasedDataSource;
+import cz.cuni.mff.d3s.spl.core.data.Statistics;
 import cz.cuni.mff.d3s.spl.core.data.instrumentation.InstrumentingDataSource;
 import cz.cuni.mff.d3s.spl.core.data.segment.SlidingSerieDataSource;
 import cz.cuni.mff.d3s.spl.core.formula.Formula;
@@ -65,6 +68,25 @@ public class SlaChecker implements Runnable {
 				SlidingSerieDataSource.create(
 						InstrumentingDataSource.create(LONG_METHOD), 0, 5),
 				1 * MILLIS_TO_NANOS));
+		Access.getMeasurementPoint(InstrumentingDataSource.createId(SHORT_METHOD)).addSink(new ReportWhenMeasured());
 	}
 
+	private static class ReportWhenMeasured implements SampleBasedDataSource {
+		@Override
+		public Statistics get() {
+			throw new UnsupportedOperationException(
+					"Don't know statistics or any mathematics at all, sorry.");
+		}
+
+		@Override
+		public void newSample(long sample, long clock) {
+			System.err.printf("Collected sample %d at time %d.\n", sample, clock);
+		}
+
+		@Override
+		public void addSubSource(SampleBasedDataSource subSource) {
+			throw new UnsupportedOperationException("This is not implemented.");
+		}
+		
+	}
 }
