@@ -37,7 +37,18 @@ public class SlidingTimeSlotDataSource implements SampleBasedDataSource {
 	public void shift(long offset) {
 		clockStart += offset;
 		clockEnd += offset;
-		samples = samples.subMap(clockStart, clockEnd);
+		/*
+		 * We cannot use directly
+		 * samples = samples.subMap(clockStart, clockEnd);
+		 * because subMap checks that all added values are within
+		 * the range and also subMap of a subMap must respect that.
+		 * 
+		 * Thus, we need to create a whole new Map and copy all the
+		 * elements there.
+		 */
+		SortedMap<Long, TickRecords> newMap = new TreeMap<>();
+		newMap.putAll(samples.subMap(clockStart, clockEnd));
+		samples = newMap;
 	}
 
 	@Override
